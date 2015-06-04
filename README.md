@@ -4,7 +4,7 @@ This README would normally document whatever steps are necessary to get your app
 
 cd merra_analyzer
 
-export PYTHONPATH = $PWD
+export PYTHONPATH=$PWD
 
 ### What is this repository for? ###
 
