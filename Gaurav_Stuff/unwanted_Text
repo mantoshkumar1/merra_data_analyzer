@@ -1,0 +1,25 @@
+        #Draw an equidistant cylindrical projection using the low resolution
+        # coastline database.
+        #m = Basemap(projection='cyl', resolution='l',
+        #            llcrnrlat=-90, urcrnrlat = 90,
+        #            llcrnrlon=-180, urcrnrlon = 180)
+        #
+        #m.drawcoastlines(linewidth=0.5)
+        #m.drawparallels(np.arange(-90., 120., 30.), labels=[1, 0, 0, 0])
+        #m.drawmeridians(np.arange(-180, 180., 45.), labels=[0, 0, 0, 1])
+        #m.pcolormesh(longitude, latitude, datam, latlon=True)
+        #cb = m.colorbar()
+        #cb.set_label(units,  labelpad=-40, y=1.05)
+    
+    
+        #basename = os.path.basename(self.hdffile)
+        #plt.title('{0}\n{1} at TIME=1 and Height=72'.format(basename,long_name))
+    
+        #fig = plt.gcf()
+        # plt.show()
+    
+        #pngfile = "{0}.py.png".format(basename+self.variablename)
+        #fig.savefig(pngfile)
+        
+        
+        
