@@ -1,7 +1,7 @@
 import ExtractMerra
 import MerraDataBase
 import os
-from Canvas import Line
+#from Canvas import Line
 from datetime import datetime
 
 
@@ -102,7 +102,8 @@ if __name__ == "__main__":
     ## Connection Setup 
      
     hostIP="127.0.0.1"
-    DB=MerraDataBase.MerraDatabase('merra','postgres','gnusmas',hostIP,"5432")
+    #DB=MerraDataBase.MerraDatabase('merra','postgres','gnusmas',hostIP,"5432")
+    DB=MerraDataBase.MerraDatabase('merra','mantosh','password',hostIP,"5432")
     DB.DatabaseConnection()
     
     tablename="MerraDatabase"

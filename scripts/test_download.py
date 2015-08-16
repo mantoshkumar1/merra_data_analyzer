@@ -2,4 +2,4 @@
 
 from merra.merra_mgr import *
 mt = merra_tool()
-mt.download_data()
+mt.download()

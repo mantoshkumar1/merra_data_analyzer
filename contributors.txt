@@ -1,4 +1,4 @@
-Developrs:
+Developr students:
 ---------------------------------------------------------------------------
 1. Mantosh Kumar
    Master student of Informatics
@@ -8,7 +8,7 @@ Developrs:
    Telephone: +49-176808-11514
 
 
-2. Gaurav Krishna Joshi : 
+2. Gaurav Krishna Joshi 
    Master student of Informatics
    Technical University of Munich, Germany
    eMail : er.gauravjoshi2011@gmail.com

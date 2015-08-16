@@ -1,6 +1,8 @@
-MERRA_DATA_DOWNLOAD_PATH  =  200
-HOST_ADDR                 =  201
-DIR_NAME                  =  202
-FILE_NAME                 =  203
-#MERRA_DATA_DOWNLINK_ADDR  =  204
-DELETE_DOWNLOADED_DATA    =  300
+MERRA_DATA_DOWNLOAD_PATH  =  100
+HOST_ADDR                 =  101
+DIR_NAME                  =  102
+FILE_TYPE                 =  103
+MERRA_DATA_DOWNLINK_ADDR  =  104
+STORE_DOWNLOADED_DATA     =  105
+FTP_DEBUG_LEVEL           =  106
+USER_EMAIL_ADDR           =  107

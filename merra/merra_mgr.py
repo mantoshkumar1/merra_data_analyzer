@@ -1,100 +1,243 @@
+# You can use this software for your purpose provided you include below two lines.
+# This file is part of merra_data_analyzer, a high-level ftp-protocol big size file downloader and merra file analyser.
+# Copyright : Mantosh Kumar @ TUM, Germany
+
+
+# importing system library package
 import sys
 import os
+import ftplib
+import socket
+import logging
+import time
+import threading
+
+
+# importing merra tool package
 import cfg
 from merra.merra_constants import *
 
 cfg = cfg.MEERA_ANALYZER_CFG
 
+run_once = 1
+
+# checking version of python
+if sys.hexversion < 34014704:
+    raise ImportError('Merra analyzer tool requires python version 2.7.5 or later')
+
+
+def setInterval(interval, times = -1):
+    # This will be the actual decorator, with fixed interval and times parameter
+    def outer_wrap(function):
+        # This will be the function to be called
+        def wrap(*args, **kwargs):
+            stop = threading.Event()
+            # This is another function to be executed in a different thread to simulate setInterval
+            def inner_wrap():
+                i = 0
+                while i != times and not stop.isSet():
+                    stop.wait(interval)
+                    function(*args, **kwargs)
+                    i += 1
+
+
+            t = threading.Timer(0, inner_wrap)
+            t.daemon = True
+            t.start()
+            return stop
+
+        return wrap
+
+    return outer_wrap
+
+
 class merra_tool:
 
     def __init__(self):
-
-        self.download_path = cfg[MERRA_DATA_DOWNLOAD_PATH]
-
-    def download_data(self):    #downlink data from ftp server
-       
-        import ftplib 
-        from ftplib import FTP, error_perm
-        import socket
-
-        try:
-            ftp = FTP(cfg[HOST_ADDR]) #hostname
-        except (socket.error, socket.gaierror), e:
-            print 'ERROR: cannot reach "%s"' % cfg[HOST_ADDR]
-            return
-        print '*** Connected to host "%s"' % cfg[HOST_ADDR]
         
+        if cfg.has_key(HOST_ADDR) and cfg.get(HOST_ADDR) is not None:
+            self.host = cfg[HOST_ADDR]
+        else:
+            self.host = 'goldsmr2.sci.gsfc.nasa.gov' # '169.154.132.64' (both are same)
+
+
+        if cfg.has_key(MERRA_DATA_DOWNLOAD_PATH) and cfg.get(MERRA_DATA_DOWNLOAD_PATH) is not None:
+            self.download_path = cfg[MERRA_DATA_DOWNLOAD_PATH]
+        else:
+            self.download_path = './merra_downloaded_data'
+
+
+        if cfg.has_key(FTP_DEBUG_LEVEL) and cfg.get(FTP_DEBUG_LEVEL) is not None:
+            self.FTP_DEBUG_LEVEL = cfg[FTP_DEBUG_LEVEL]
+        else:
+            self.FTP_DEBUG_LEVEL = 1
+
+        # NASA asks for email address as password for downloading
+        if cfg.has_key(USER_EMAIL_ADDR) and cfg.get(USER_EMAIL_ADDR) is not None:
+            self.passwd = cfg[USER_EMAIL_ADDR]
+        else:
+            self.passwd = 'demo@tum.de'
+        
+        self.login = 'anonymous'
+
+        
+        #self.show_progress = True
+        self.directory = ''
+        self.connect() # sets self.conn
+
+        # For managing file transfers
+        self.monitor_interval = 2
+        self.ptr = None  # used to calculate size of downloaded file
+        self.max_attempts = 8 #change it to 8
+        self.waiting = True
+        self.retry_timeout = 15 # If the connection dies, wait this long before reconnecting
+
+
+    def connect(self): 
+        """Description: Connect to FTP server.
+        """
         try:
-            ftp.login()
-        except ftplib.error_perm:
-            print 'ERROR: cannot login anonymously : authentication denied'
-            ftp.quit()
+            self.conn = ftplib.FTP(self.host, self.login, self.passwd)
+            self.conn.sendcmd("TYPE i") # switching to binary mode because 550 SIZE is not allowed in ASCII mode
+
+
+            # optimize socket params for download task
+            self.conn.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            self.conn.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 75)
+            self.conn.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 60)
+
+
+            self.conn.set_debuglevel(self.FTP_DEBUG_LEVEL)
+
+            # setting passive mode on
+            self.conn.set_pasv(True)
+
+        except ftplib.error_perm as err:
+            print("Error: {}".format(str(err)))
             return
-        print '*** Logged in as "anonymous"'
+        
+        print '*** Connected to host "%s"' % self.host
         
         # Return the welcome message sent by the server in reply to the initial connection
-        print os.linesep #new line
-        print ftp.getwelcome()
-        print os.linesep #new line
+        global run_once
+        if(run_once):
+            print os.linesep #new line
+            print self.conn.getwelcome()
+            print os.linesep #new line
+            run_once = 0
 
 
-        try:  #moving to directory where desired file is stored over ftp server
-            ftp.cwd(cfg[DIR_NAME])
+    def disconnect(self):
+        #closing connection
+        self.conn.quit()
+
+    def move_to_dir(self):
+        try: #moving to directory where desired file is stored over ftp server
+            self.conn.cwd(self.directory)
         except ftplib.error_perm:
             print 'ERROR: cannot CD to "%s"' % cfg[DIR_NAME]
-            ftp.quit()
-            return
+            self.disconnect()
+            
+ 
+    def get_file_list(self):
+        """ Function name: get_file_list
+        Description: Return a list of file names using ftplib.nlst
+        """
+       
+        data = []
+        
+        try:
+            #data = self.conn.nlst(self.directory)
+            data = self.conn.nlst(cfg[FILE_TYPE])
+        except ftplib.error_temp as err:
+            if str(err) == "550 No files found":
+                pass # data remains []
+            else:
+                print("Error: {}".format(str(err)))
+
+        return data
+
+
+    def download(self):
+        self.directory = cfg[DIR_NAME]
+        self.move_to_dir()
+
+        file_list = self.get_file_list();
+        for fl in file_list:
+            self.download_file(fl);
         
 
-        print '*** Downloading of HDF files starts now'        
-        dwnld_dir = cfg[MERRA_DATA_DOWNLOAD_PATH]
+    def download_file(self, file_name):
+        """ Function name: download_file
+        Description : This method downloads the file from FTP server, tries to re-establish a broken connection, \
+                      resumes the file transfer where it left off and shows the download progress
+        Parameter   : file_name (name of downloading HDF file)
 
-        # Loop through matching files and download each one individually
-        for fl in ftp.nlst(cfg[FILE_NAME]):
-            # create a full local filepath
-            try: #getting binary file from ftp server
-                #gFile = open(fl, 'wb')
-                gFile = open(os.path.join(dwnld_dir, fl), 'w')
-                ftp.retrbinary('RETR %s' % fl, gFile.write)
-            except ftplib.error_perm:
-                print 'ERROR: cannot read file "%s"' % fl
-                os.unlink(fl)
-                gFile.close()
+        Return      : In case of successful download: 1
+                      In case of failure : 0
+        """
+
+        with open(os.path.join(self.download_path, file_name), 'w') as f:
+            self.ptr = f.tell()
+
+
+            @setInterval(self.monitor_interval)
+            def monitor():
+                if not self.waiting and not f.closed:
+                    i = f.tell()
+                    if self.ptr < i:
+                        logging.debug("%d  -  %0.1f Kb/s" % (i, (i-self.ptr)/(1024*self.monitor_interval)))
+                        print "\nDownloading status: %d  -  %0.1f Kb/s" % (i, (i-self.ptr)/(1024*self.monitor_interval))
+                        self.ptr = i
+                    else:
+                        self.conn.close()
+
+
+            self.conn.sendcmd("TYPE i") # switching to binary mode because 550 SIZE is not allowed in ASCII mode
+            remote_filesize = self.conn.size(file_name)
+            res = ''
+
+
+            mon = monitor()
+            while remote_filesize > f.tell():
+                print file_name + ": Downloading in progress \n"
+                try:
+                    self.connect()
+                    self.move_to_dir()
+                    self.waiting = False
+                    # retrieve file from position where we were disconnected
+                    if f.tell() == 0:
+                        res = self.conn.retrbinary('RETR %s' % file_name, f.write)
+                    else:
+                        res = self.conn.retrbinary('RETR %s' % file_name, f.write, rest=f.tell())
+
+                except:
+                    self.max_attempts -= 1
+                    if self.max_attempts == 0:
+                        mon.set()
+                        logging.exception('')
+                        raise
+
+                    self.waiting = True
+                    logging.info('waiting {} sec...'.format(self.retry_timeout))
+                    time.sleep(self.retry_timeout)
+                    logging.info('reconnect')
+
+
+            mon.set() #stop monitor
+
+
+            if not res.startswith('226 Transfer complete'):
+                logging.error('Downloadeding of file {0} failed.'.format(file_name))
+                os.remove(os.path.join(self.download_path, file_name))
+                return 0
+
             else:
-                print '*** %s is downloaded' % fl
-                gFile.close()
-        else:
-            print os.linesep #new line
-            print '*** Downloading sucessfully finished' 
-            print '*** HDF files are downloaded at "%s""' % cfg[MERRA_DATA_DOWNLOAD_PATH]
+                logging.info('file {} successfully downloaded.'.format(file_name))
+                print '\nfile {} successfully downloaded.'.format(file_name)
+                if cfg[STORE_DOWNLOADED_DATA] is False:
+                    os.remove(os.path.join(self.download_path, file_name))
+                    print '\nfile {} deleted as per user instruction.'.format(file_name)
 
-
-        #closing connection
-        ftp.quit()
-
-       
-       
-    '''
-    def read_hdf4_file():
-        from pyhdf import SD
-        FILE_NAME="my_file.hdf" # The hdf file to read
-        SDS_NAME="my_sds" # The name of the sds to read
-        X_LENGTH=5
-        Y_LENGTH=16
-
-        # open the hdf file for reading
-        hdf=SD.SD(FILE_NAME)
-        # read the sds data
-        sds=hdf.select(SDS_NAME)
-        data=sds.get()
-        # turn [y,x] (HDF representation) data into [x,y] (numpy one)
-        data=data.reshape(data.shape[1],data.shape[0])
-        # print out the data
-        msg_out=""
-        for i in range(X_LENGTH):
-            for j in range(Y_LENGTH):
-                msg_out+=str(data[i,j])+" "
-            msg_out+="\n"
-        print msg_out
-    '''
+            return 1
 
