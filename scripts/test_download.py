@@ -3,3 +3,4 @@
 from merra.merra_mgr import *
 mt = merra_tool()
 mt.download()
+mt.quit()

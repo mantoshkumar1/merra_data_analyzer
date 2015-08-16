@@ -129,14 +129,21 @@ class merra_tool:
 
     def disconnect(self):
         #closing connection
-        self.conn.quit()
+        try:
+            self.conn.quit()
+        except ftplib.error_reply, ftplib.error_proto:
+            raise
 
-    def move_to_dir(self):
+    def move_to_dir(self, curr_dir = None):
         try: #moving to directory where desired file is stored over ftp server
-            self.conn.cwd(self.directory)
+            if(curr_dir is not None):
+                self.conn.cwd(curr_dir)
+            else:
+                self.conn.cwd(self.directory)
+
         except ftplib.error_perm:
             print 'ERROR: cannot CD to "%s"' % cfg[DIR_NAME]
-            self.disconnect()
+            #self.disconnect()
             
  
     def get_file_list(self):
@@ -156,6 +163,21 @@ class merra_tool:
                 print("Error: {}".format(str(err)))
 
         return data
+
+    def isdir(self, dir_name):
+        """ 
+        Function name: isdir
+        Description: Checks whether given directory over the FTP server in current directory is a directory or not
+        Return: If dir_nam is a directory, returns True
+                else return False
+        """
+        try:
+            self.conn.cwd(dir_name)
+            self.conn.cwd('..')
+            return True
+
+        except ftplib.all_errors:
+            return False
 
 
     def download(self):
@@ -237,7 +259,7 @@ class merra_tool:
                 print '\nfile {} successfully downloaded.'.format(file_name)
                 if cfg[STORE_DOWNLOADED_DATA] is False:
                     os.remove(os.path.join(self.download_path, file_name))
-                    print '\nfile {} deleted as per user instruction.'.format(file_name)
+                    print '\nfile {} is deleted as per user instruction.'.format(file_name)
 
             return 1
 
