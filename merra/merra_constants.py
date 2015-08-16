@@ -1,3 +1,7 @@
+# You can use this software for your purpose provided you include below two lines.
+# This file is part of merra_data_analyzer, a high-level ftp-protocol big size file downloader and merra file analyser.
+# Copyright : Mantosh Kumar @ TUM, Germany
+
 MERRA_DATA_DOWNLOAD_PATH  =  100
 HOST_ADDR                 =  101
 DIR_NAME                  =  102

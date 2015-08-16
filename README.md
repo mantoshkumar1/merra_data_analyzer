@@ -1,4 +1,7 @@
-# README #
+# You can use this software for your purpose provided you include below two lines.
+# This file is part of merra_data_analyzer, a high-level ftp-protocol big size file downloader and merra file analyser.
+# Copyright : Mantosh Kumar @ TUM, Germany
+
 This README document contains all the informations that are necessary to get this application up and running.
 
 ### How to use tool ###
