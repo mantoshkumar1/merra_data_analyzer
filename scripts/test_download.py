@@ -2,5 +2,6 @@
 
 from merra.merra_mgr import *
 mt = merra_tool()
-mt.download()
-mt.disconnect()
+mt.crawl_server()
+#mt.download()
+#mt.disconnect()

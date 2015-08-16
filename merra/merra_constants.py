@@ -4,7 +4,7 @@
 
 MERRA_DATA_DOWNLOAD_PATH  =  100
 HOST_ADDR                 =  101
-DIR_NAME                  =  102
+HOME_DIR                  =  102
 FILE_TYPE                 =  103
 MERRA_DATA_DOWNLINK_ADDR  =  104
 STORE_DOWNLOADED_DATA     =  105
