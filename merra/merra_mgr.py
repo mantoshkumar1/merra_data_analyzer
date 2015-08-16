@@ -72,6 +72,7 @@ class merra_tool:
         else:
             self.FTP_DEBUG_LEVEL = 1
 
+
         # NASA asks for email address as password for downloading
         if cfg.has_key(USER_EMAIL_ADDR) and cfg.get(USER_EMAIL_ADDR) is not None:
             self.passwd = cfg[USER_EMAIL_ADDR]
@@ -85,12 +86,15 @@ class merra_tool:
         self.directory = ''   # current directory
         self.dir_list = []
         self.file_path_list = []
+
+
         self.connect() # sets self.conn
+
 
         # For managing file transfers
         self.monitor_interval = 2
         self.ptr = None  # used to calculate size of downloaded file
-        self.max_attempts = 8 #change it to 8
+        self.max_attempts = 11 #change it to 11
         self.waiting = True
         self.retry_timeout = 15 # If the connection dies, wait this long before reconnecting
 
@@ -101,8 +105,10 @@ class merra_tool:
         Description   : Connect to FTP server 
         Return        :
         """
+
         try:
             self.conn = ftplib.FTP(self.host, self.login, self.passwd)
+            
             self.conn.sendcmd("TYPE i") # switching to binary mode because 550 SIZE is not allowed in ASCII mode
  
 
@@ -114,33 +120,28 @@ class merra_tool:
 
             self.conn.set_debuglevel(self.FTP_DEBUG_LEVEL)
 
+
             # setting passive mode on
             self.conn.set_pasv(True)
+
 
         except ftplib.error_perm as err:
             print("Error: {}".format(str(err)))
             return
+
         
         print '*** Connected to host "%s"' % self.host
+
         
         global run_once
         # Return the welcome message sent by the server in reply to the initial connection
         if(run_once):
-            #self.ftp_login()
             self.directory = self.conn.pwd()
             print os.linesep #new line
             print self.conn.getwelcome()
             print os.linesep #new line
             run_once = 0
      
-    def ftp_login(self):
-        try:
-            self.conn.login()
-        except ftplib.error_perm:
-            print 'ERROR: cannot login anonymously : authentication denied'
-            self.disconnect()
-            return
-        print '*** Logged in as "anonymous"'
 
     def disconnect(self):
         """
@@ -148,9 +149,10 @@ class merra_tool:
         Description   : close the connection
         Return        :
         """
-        #closing connection
+        
         try:
             self.conn.quit()
+
         except ftplib.error_reply, ftplib.error_proto:
             raise
 
@@ -160,11 +162,14 @@ class merra_tool:
         Description   : Set the current directory on the server
         Return        :
         """
+
         try: #moving to directory where desired file is stored over ftp server
             if(curr_dir is not None):
                 self.conn.cwd(curr_dir)
+
             else:
                 self.conn.cwd(self.directory)
+
       
         except ftplib.error_perm:
             print 'ERROR: cannot CD to "%s"' % cfg[HOME_DIR]
@@ -178,15 +183,19 @@ class merra_tool:
         """
        
         data = []
+
         
         try:
             #data = self.conn.nlst(self.directory)
             data = self.conn.nlst(cfg[FILE_TYPE])
+
         except ftplib.error_temp as err:
             if str(err) == "550 No files found":
                 pass # data remains []
+
             else:
                 print("Error: {}".format(str(err)))
+
 
         return data
     
@@ -196,33 +205,16 @@ class merra_tool:
         Description   : Driver function to crwal the server and download
         Return        :
         """
+
         dir_name = cfg[HOME_DIR]
         self.crwal_all_dir(dir_name)
+
 
         import pdb;pdb.set_trace()
         # Now ready for download, so let's set the curr_dir to home
         self.move_to_dir('/.')
         self.directory = self.conn.pwd()
         import pdb;pdb.set_trace()
-
-    def find_dirs(self, ln):
-        """
-        Function name : find_dirs
-        Description   : 
-        Return :
-        """
-        cols = ln.split(' ')
-        objname = cols[len(cols)-1] # file or directory name
-        
-        import pdb;pdb.set_trace()
-        if self.isdir(objname):
-            print "YES"
-            self.dir_list.append(objname)
-        elif objname.endswith('.hdf'):
-            import pdb;pdb.set_trace()
-            print "NO"
-            self.file_path_list.append(os.path.join(self.directory, objname)) # full path
-    
 
 
     def crwal_all_dir(self, dir_name):
@@ -231,6 +223,7 @@ class merra_tool:
         Description   : Recursive function - Crwal throughout ftp server
         Return        :
         """
+
         new_dirs = []
         self.directory = self.conn.pwd()
         
@@ -238,14 +231,18 @@ class merra_tool:
             print("Changing directory from " + self.directory + " to " + dir_name)
             #parent_dir = self.directory
             self.move_to_dir(dir_name)
+
+
             #self.conn.cwd(dir_name)
             self.directory = self.conn.pwd()
             print("Current directory: " + self.directory)
+
  
             # listing all files/subdir inside this directoty
             new_dirs = self.retrive_file_list()
             self.organise_dir_files(new_dirs)
             #self.conn.retrlines('LIST', self.find_dirs)
+
 
             new_dirs = self.dir_list
             #print("Directories inside " + dir_name + " :")
@@ -254,6 +251,7 @@ class merra_tool:
             for sub_dir in new_dirs:
                 self.dir_list = []
                 self.crwal_all_dir(sub_dir) # recursion 
+
 
             self.move_to_dir('..') # come back to own directory when done
             #self.move_to_dir(parent_dir) # come back to own directory when done
@@ -264,9 +262,11 @@ class merra_tool:
         Description   : Store directories name and HDF file name in dir_list and file_path_list respectively
         Return        :
         """
+
         for entry in files:
             if self.isdir(entry):
                  self.dir_list.append(entry)
+
             elif entry.endswith('.hdf'):
                  self.file_path_list.append(os.path.join(self.directory, entry)) # full path
                  
@@ -276,22 +276,19 @@ class merra_tool:
         Description   : List all files/subdir inside current directoty
         Return        : List of subdir/file names
         """
+
         files = []
         try:
             files = self.conn.nlst()
+
         except ftplib.error_perm, resp:
             if str(resp) == "550 No files found":
                 print "No files in this directory"
                 pass # file remains []
+
                 
         return files
             
-        #try:
-        #    self.conn.retrlines('LIST', self.find_dirs)
-        #except ftplib.all_errors as err:
-        #    print("Error: {}".format(str(err)))
-        #    raise
-
 
     def isdir(self, dir_name):
         """ 
@@ -300,11 +297,13 @@ class merra_tool:
         Return        : If dir_nam is a directory, returns True
                         else return False
         """
+
         try:
             prev_path = self.conn.pwd()
             self.conn.cwd(dir_name)
             self.conn.cwd(prev_path)
             return True
+
 
         except ftplib.all_errors:
             return False
@@ -316,8 +315,10 @@ class merra_tool:
         Description   : Download
         Return        : 
         """
+
         self.directory = cfg[HOME_DIR]
         self.move_to_dir()
+
 
         file_list = self.get_file_list();
         for fl in file_list:
@@ -394,7 +395,7 @@ class merra_tool:
                 #print '\nfile {} successfully downloaded.'.format(file_name)
                 if cfg[STORE_DOWNLOADED_DATA] is False:
                     os.remove(os.path.join(self.download_path, file_name))
-                    print '\nfile {} is deleted as per user instruction.'.format(file_name)
+                    print 'file {} is deleted as per user instruction.'.format(file_name)
 
             return True
 
