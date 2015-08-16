@@ -1,5 +1,5 @@
 # You can use this software for your purpose provided you include below two lines.
-# This file is part of merra_data_analyzer, a high-level ftp-protocol big size file downloader and merra file analyser.
+# This file is part of merra_data_analyzer, a high-level ftp-protocol big size recursive file downloader and merra file analyser.
 # Copyright : Mantosh Kumar @ TUM, Germany
 
 from merra.merra_constants import *
@@ -12,8 +12,8 @@ MEERA_ANALYZER_CFG = {
                          FTP_DEBUG_LEVEL : 2, # 0 = none, 1 = some output, 2 = max debugging output
                          
                          HOST_ADDR : '169.154.132.64', # 'goldsmr3.sci.gsfc.nasa.gov'
-                         DIR_NAME  : "data/s4pa/MERRA_MONTHLY/MATMNXFLX.5.2.0/2015",    #Scope of improvement
-                         #DIR_NAME  : "data/s4pa/MERRA",    #Scope of improvement
+                         #DIR_NAME  : "data/s4pa/MERRA_MONTHLY/MATMNXFLX.5.2.0/2015",    #Scope of improvement
+                         DIR_NAME  : "data/s4pa/MERRA_MONTHLY/MAIMCPASM.5.2.0/1979",    #Scope of improvement
                          FILE_TYPE : '*.hdf',
                          
 }
