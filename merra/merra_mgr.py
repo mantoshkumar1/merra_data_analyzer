@@ -392,21 +392,23 @@ class merra_tool:
         with open(os.path.join(self.download_path, file_name), 'w') as f:
             self.ptr = f.tell()
 
+            # switching to binary mode because 550 SIZE is not allowed in ASCII mode
+            self.conn.sendcmd("TYPE i")
+
+            remote_filesize = self.conn.size(file_name)
 
             @setInterval(self.monitor_interval)
             def monitor():
                 if not self.waiting and not f.closed:
                     i = f.tell()
                     if self.ptr < i:
-                        logging.debug("%d  -  %0.1f Kb/s" % (i, (i-self.ptr)/(1024*self.monitor_interval)))
-                        print "Downloading status: %d  -  %0.1f Kb/s" % (i, (i-self.ptr)/(1024*self.monitor_interval))
+                        logging.debug("%d - %0.1f Kb/s" % (i, (i-self.ptr)/(1024*self.monitor_interval)))
+                        print "Downloading status: %d / %d   -  %0.1f Kb/s" % (i, remote_filesize, \
+                                                                              (i-self.ptr)/(1024*self.monitor_interval))
                         self.ptr = i
 
-            # switching to binary mode because 550 SIZE is not allowed in ASCII mode
-            self.conn.sendcmd("TYPE i")
-            remote_filesize = self.conn.size(file_name)
+            
             res = ''
-
 
             mon = monitor()
             while remote_filesize > f.tell():
@@ -425,7 +427,7 @@ class merra_tool:
                     num_attempts -= 1
                     if num_attempts == 0:
                         mon.set()
-                        logging.exception('')
+                        #logging.exception('')
                         self.shutdown()
 
 
@@ -499,6 +501,12 @@ class merra_tool:
 
         """
 
+        print "***************************************************"           
+        print "Internet / FTP server down"
+        print "Program Terminating"
+        print "***************************************************"          
+ 
+        self.conn.close()
         sys.exit(0)
 
 
