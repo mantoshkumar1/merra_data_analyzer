@@ -219,7 +219,7 @@ class merra_tool:
           
             # Check whether this file exists or not, if yes then populate the DB
             if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
-                self.populate_merra_db(local_file)
+                self.process_hdf_file(local_file)
 
             return
 
@@ -481,8 +481,9 @@ class merra_tool:
         Description   : This is a bridge function between web crawl and DB functions. 
                         This function sends file to DB function for extraction and processing and populating Merra DB.
 
-        Parameters    : Scenario 1: If user has specified an locally downloaded HDF file, then this function doesn't \
-                        need file_name (= None) and obviously this file_name (= None) will not be updated in downloaded_hdf_files_db. \
+        Parameters    : Scenario 1: If user has specified an locally downloaded HDF file, then this function \
+                        doesn't need file_name (= None) and obviously this file_name (= None) will not be updated \
+                        in downloaded_hdf_files_db
          
                         Scenario 2: If this tool is crawling all over ftp server, then this function needs full_path \
                         and name of the downloaded hdf file
