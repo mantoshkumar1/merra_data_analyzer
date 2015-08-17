@@ -261,9 +261,17 @@ class merra_tool:
  
             # download hdf files stored in self.hdffile_list
             for hdf_file in self.hdffile_list:
-                self.download_file(hdf_file)
-                dwnlded_hdf_full_path = os.path.join(self.download_path, hdf_file)
-                self.populate_merra_db(dwnlded_hdf_full_path, hdf_file)
+                print "\n" + "downloadnging starts for : " + hdf_file
+                print "************************************************************************"
+                #if(self.download_file(hdf_file)):
+                if 0:
+                    dwnlded_hdf_full_path = os.path.join(self.download_path, hdf_file)
+                    self.populate_merra_db(dwnlded_hdf_full_path, hdf_file)
+ 
+                    # Once DB is populated, you can delete the downloaded file
+                    if cfg[STORE_DOWNLOADED_DATA] is False:
+                        self.delete_file(hdf_file)
+                        print 'file {} is deleted as per user instruction.'.format(hdf_file)
 
             self.hdffile_list = [ ]
 
@@ -383,7 +391,7 @@ class merra_tool:
 
             mon = monitor()
             while remote_filesize > f.tell():
-                print file_name + ": Downloading in progress ........"
+                print "\n" + file_name + ": Downloading in progress ........"
                 try:
                     self.connect()
                     self.move_to_dir()
@@ -415,17 +423,33 @@ class merra_tool:
             if not res.startswith('226 Transfer complete'):
                 logging.error('Downloadeding of file {0} failed.'.format(file_name))
                 print 'Downloadeding of file {0} failed.'.format(file_name)
-                os.remove(os.path.join(self.download_path, file_name))
+                self.delete_file(file_name)
                 return False
 
             else:
                 logging.info('file {} successfully downloaded.'.format(file_name))
                 print 'file {} successfully downloaded.'.format(file_name)
-                if cfg[STORE_DOWNLOADED_DATA] is False:
-                    os.remove(os.path.join(self.download_path, file_name))
-                    print 'file {} is deleted as per user instruction.'.format(file_name)
 
             return True
+
+
+    def delete_file(self, file_name):
+        """ 
+        Function name : delete_file
+
+        Description   : delete local file on system
+
+        Parameters    : file_name (String, name of file)
+        
+        Return        : 
+
+        """
+         
+        file_full_path = os.path.join(self.download_path, file_name)
+        try:
+           os.remove(file_full_path)
+        except OSError:
+            pass
 
 
 
@@ -447,5 +471,7 @@ class merra_tool:
 
         pass
 
+    def file_exist_in_db(self):
+       pass
 
  

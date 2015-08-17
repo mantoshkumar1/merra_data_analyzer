@@ -9,7 +9,7 @@ from merra.merra_constants import *
 MEERA_ANALYZER_CFG = {  
                          # General two settings
                          MERRA_DATA_DOWNLOAD_PATH  : './merra_downloaded_data',
-                         STORE_DOWNLOADED_DATA : False, # Set to True if you want to store downloaded files
+                         STORE_DOWNLOADED_DATA : True, # Set to True if you want to store downloaded files
 
                          
                         
@@ -22,7 +22,7 @@ MEERA_ANALYZER_CFG = {
                          # Technically advanced four settings
                          USER_EMAIL_ADDR : 'demo@tum.de', # NASA uses email as password for login (even dummy email will work)
 
-                         HOST_ADDR : '169.154.132.64', # 'goldsmr3.sci.gsfc.nasa.gov'
+                         HOST_ADDR : 'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
 
                          FTP_DEBUG_LEVEL : 0, # 0 = none, 1 = some output, 2 = max debugging output \
                                               # Use this setting to observe interacton of this tool with ftp server
