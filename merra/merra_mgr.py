@@ -262,15 +262,15 @@ class merra_tool:
  
             # download hdf files stored in self.hdffile_list
             for hdf_file in self.hdffile_list:
-                if(self.file_exist_in_db(hdf_file))
-                    print "\n" + hdf_file + " has already been populated in DB"
+                if(self.file_exist_in_db(hdf_file)):
+                    print "\n" + hdf_file + " data is already available in MERRA DB"
                     continue
                     
                     
                 print "\n" + "downloading starts for : " + hdf_file
                 print "************************************************************************"
                 if(self.download_file(hdf_file)):
-                if 0:
+                #if 0:
                     dwnlded_hdf_full_path = os.path.join(self.download_path, hdf_file)
                     self.process_hdf_file(dwnlded_hdf_full_path, hdf_file)
  
