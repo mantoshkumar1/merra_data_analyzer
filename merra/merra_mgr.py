@@ -69,7 +69,7 @@ class merra_tool:
         if cfg.has_key(HOST_ADDR) and cfg.get(HOST_ADDR) is not None:
             self.host = cfg[HOST_ADDR]
         else:
-            self.host = 'goldsmr2.sci.gsfc.nasa.gov' # '169.154.132.64' (both are same)
+            self.host = 'goldsmr2.sci.gsfc.nasa.gov' # '169.154.132.64' (Both are same. Ping this web addr, you will get ip addr)
 
 
         if cfg.has_key(MERRA_DATA_DOWNLOAD_PATH) and cfg.get(MERRA_DATA_DOWNLOAD_PATH) is not None:
@@ -93,19 +93,20 @@ class merra_tool:
         self.login = 'anonymous'
 
         
-        self.directory = ''      # current directory over ftp server
-        self.dir_list = [ ]      # subdir list
-        self.hdffile_list = [ ]  # HDF file list
+        self.directory    =  ''       # A temp variable - keeps current directory of the ftp server
+        self.curr_dir     =  ''       # keeps updated Pathname of the current directory on the ftp server
+        self.dir_list     =  [ ]      # List of sub directory
+        self.hdffile_list =  [ ]      # List of HDF file
 
 
         self.connect()           # sets self.conn
 
 
         # For managing file transfers
-        self.monitor_interval = 2     # seconds
-        self.ptr = None               # used to calculate size of downloaded file
-        self.max_attempts = 9         # in case of download failure, number of max tries to download
-        self.waiting = True           # used for thread
+        self.monitor_interval = 2     # seconds (thread will notify the status of download after every THIS seconds
+        self.ptr = None               # Used to calculate size of downloaded file
+        self.max_attempts = 9         # In case of download failure, number of max tries to download
+        self.waiting = True           # Used for thread
         self.retry_timeout = 15       # If the connection dies, wait this long before reconnecting
 
 
@@ -124,11 +125,11 @@ class merra_tool:
         try:
             self.conn = ftplib.FTP(self.host, self.login, self.passwd)
 
-            
-            self.conn.sendcmd("TYPE i") # switching to binary mode because 550 SIZE is not allowed in ASCII mode
+            # Switching to binary mode because 550 SIZE is not allowed in ASCII mode
+            self.conn.sendcmd("TYPE i")
  
 
-            # optimize socket params for download task
+            # Optimize socket params for download task
             self.conn.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
             self.conn.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 75)
             self.conn.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 60)
@@ -137,7 +138,7 @@ class merra_tool:
             self.conn.set_debuglevel(self.FTP_DEBUG_LEVEL)
 
 
-            # setting passive mode on
+            # Setting passive mode on
             self.conn.set_pasv(True)
 
 
@@ -164,7 +165,7 @@ class merra_tool:
         """
         Function name : disconnect
 
-        Description   : close the connection
+        Description   : Close the connection
         
         Parameters    : 
 
@@ -174,7 +175,7 @@ class merra_tool:
         try:
             self.conn.quit()
 
-        except ftplib.error_reply, ftplib.error_proto:
+        except (ftplib.error_reply, ftplib.error_proto):
             print "Wir danken fur . Auf Wiedersehen!"
 
 
@@ -266,7 +267,7 @@ class merra_tool:
                 #if(self.download_file(hdf_file)):
                 if 0:
                     dwnlded_hdf_full_path = os.path.join(self.download_path, hdf_file)
-                    self.populate_merra_db(dwnlded_hdf_full_path, hdf_file)
+                    self.process_hdf_file(dwnlded_hdf_full_path, hdf_file)
  
                     # Once DB is populated, you can delete the downloaded file
                     if cfg[STORE_DOWNLOADED_DATA] is False:
@@ -324,7 +325,7 @@ class merra_tool:
         except ftplib.error_perm, resp:
             if str(resp) == "550 No files found":
                 print "No files in this directory"
-                pass # file remains []
+                pass # files remains []
 
                 
         return files
@@ -383,8 +384,8 @@ class merra_tool:
                     else:
                         self.conn.close()
 
-
-            self.conn.sendcmd("TYPE i") # switching to binary mode because 550 SIZE is not allowed in ASCII mode
+            # switching to binary mode because 550 SIZE is not allowed in ASCII mode
+            self.conn.sendcmd("TYPE i")
             remote_filesize = self.conn.size(file_name)
             res = ''
 
@@ -396,7 +397,7 @@ class merra_tool:
                     self.connect()
                     self.move_to_dir()
                     self.waiting = False
-                    # retrieve file from the position where we were disconnected
+                    # Retrieve file from the position where we were disconnected
                     if f.tell() == 0:
                         res = self.conn.retrbinary('RETR %s' % file_name, f.write)
                     else:
@@ -417,7 +418,8 @@ class merra_tool:
                     print 'reconnect'
 
 
-            mon.set() #stop monitor
+            #stop monitor
+            mon.set()
 
 
             if not res.startswith('226 Transfer complete'):
@@ -427,8 +429,8 @@ class merra_tool:
                 return False
 
             else:
-                logging.info('file {} successfully downloaded.'.format(file_name))
-                print 'file {} successfully downloaded.'.format(file_name)
+                logging.info('File {} successfully downloaded.'.format(file_name))
+                print 'File {} successfully downloaded.'.format(file_name)
 
             return True
 
@@ -437,7 +439,7 @@ class merra_tool:
         """ 
         Function name : delete_file
 
-        Description   : delete local file on system
+        Description   : Delete local file on system
 
         Parameters    : file_name (String, name of file)
         
@@ -447,20 +449,34 @@ class merra_tool:
          
         file_full_path = os.path.join(self.download_path, file_name)
         try:
-           os.remove(file_full_path)
+            os.remove(file_full_path)
         except OSError:
             pass
 
 
-
-    def populate_merra_db(self, full_path, file_name = None):
+    def ftp_pwd(self):
         """ 
-        Function name : populate_merra_db
+        Function name : ftp_pwd
 
-        Description   : Populates Merra DB
+        Description   : Update pathname of the current directory on the server
 
-        Parameters    : Scenario 1: If user has specified an already downloaded HDF file, then this function doesn't \
-                        need file_name (= None) and obviously this file_name (= None) will not be updated in download_file_db. \
+        Parameters    : 
+        
+        Return        : 
+
+        """
+        pass
+
+
+    def process_hdf_file(self, full_path, file_name = None):
+        """ 
+        Function name : process_hdf_file
+
+        Description   : This is a bridge function between web crawl and DB functions. 
+                        This function sends file to DB function for extraction and processing and populating Merra DB.
+
+        Parameters    : Scenario 1: If user has specified an locally downloaded HDF file, then this function doesn't \
+                        need file_name (= None) and obviously this file_name (= None) will not be updated in downloaded_hdf_files_db. \
          
                         Scenario 2: If this tool is crawling all over ftp server, then this function needs full_path \
                         and name of the downloaded hdf file
@@ -471,7 +487,19 @@ class merra_tool:
 
         pass
 
-    def file_exist_in_db(self):
-       pass
+
+    def file_exist_in_db(self, file_name):
+        """ 
+        Function name : file_exist_in_db
+
+        Description   : Check whether this file(file_name) has already been used to populate the DB or not
+
+        Parameters    : file_name (String, name of file)
+         
+        Return        : If file_name has already been used to populate DB, returns True
+                        else return False
+        """
+
+        return False
 
  
