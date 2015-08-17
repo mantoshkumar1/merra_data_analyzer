@@ -99,15 +99,27 @@ class merra_tool:
         self.hdffile_list =  [ ]      # List of HDF file
 
 
-        self.connect()           # sets self.conn
-
-
         # For managing file transfers
         self.monitor_interval = 2     # seconds (thread will notify the status of download after every THIS seconds)
         self.ptr = None               # Used to calculate size of downloaded file
-        self.max_attempts = 9         # In case of download failure, number of max tries to download
         self.waiting = True           # Used for thread
-        self.retry_timeout = 15       # If the connection dies, wait this long before reconnecting
+
+
+        # If the connection dies, wait this long before reconnecting
+        if cfg.has_key(RETRY_TIMEOUT) and cfg.get(RETRY_TIMEOUT) is not None:
+            self.retry_timeout = cfg[RETRY_TIMEOUT]
+        else:
+            self.retry_timeout = 15
+
+
+        # In case of download/connection failure, number of max tries to download/reconnection
+        if cfg.has_key(MAX_ATTEMPTS_TO_DOWNLOAD) and cfg.get(MAX_ATTEMPTS_TO_DOWNLOAD) is not None:
+            self.max_attempts = cfg[MAX_ATTEMPTS_TO_DOWNLOAD]
+        else:
+            self.max_attempts = 11
+       
+        # sets self.conn 
+        self.connect()
 
 
 
@@ -275,7 +287,7 @@ class merra_tool:
                     self.process_hdf_file(dwnlded_hdf_full_path, hdf_file)
  
                     # Once DB is populated, you can delete the downloaded file
-                    if cfg[STORE_DOWNLOADED_DATA] is False:
+                    if cfg[SAVE_DOWNLOADED_DATA] is False:
                         self.delete_file(hdf_file)
                         print 'file {} is deleted as per user instruction.'.format(hdf_file)
 
@@ -374,6 +386,8 @@ class merra_tool:
         Return      : In case of successful download: True
                       In case of failure : False
         """
+    
+        num_attempts = self.max_attempts
 
         with open(os.path.join(self.download_path, file_name), 'w') as f:
             self.ptr = f.tell()
@@ -387,8 +401,6 @@ class merra_tool:
                         logging.debug("%d  -  %0.1f Kb/s" % (i, (i-self.ptr)/(1024*self.monitor_interval)))
                         print "Downloading status: %d  -  %0.1f Kb/s" % (i, (i-self.ptr)/(1024*self.monitor_interval))
                         self.ptr = i
-                    else:
-                        self.conn.close()
 
             # switching to binary mode because 550 SIZE is not allowed in ASCII mode
             self.conn.sendcmd("TYPE i")
@@ -410,11 +422,12 @@ class merra_tool:
                         res = self.conn.retrbinary('RETR %s' % file_name, f.write, rest=f.tell())
 
                 except:
-                    self.max_attempts -= 1
-                    if self.max_attempts == 0:
+                    num_attempts -= 1
+                    if num_attempts == 0:
                         mon.set()
                         logging.exception('')
-                        raise
+                        self.shutdown()
+
 
                     self.waiting = True
                     logging.info('waiting {} sec...'.format(self.retry_timeout))
@@ -472,6 +485,21 @@ class merra_tool:
 
         """
         pass
+
+
+    def shutdown(self):
+        """ 
+        Function name : shutdown
+
+        Description   : Terminates program
+
+        Parameters    : 
+        
+        Return        : 
+
+        """
+
+        sys.exit(0)
 
 
     def process_hdf_file(self, full_path, file_name = None):

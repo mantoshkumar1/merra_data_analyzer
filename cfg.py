@@ -9,7 +9,7 @@ from merra.merra_constants import *
 MEERA_ANALYZER_CFG = {  
                          # General two settings
                          MERRA_DATA_DOWNLOAD_PATH  : './merra_downloaded_data',
-                         STORE_DOWNLOADED_DATA : True, # Set to True if you want to store downloaded files
+                         SAVE_DOWNLOADED_DATA : True, # Set to True if you want to store downloaded files
 
                          
                         
@@ -17,6 +17,12 @@ MEERA_ANALYZER_CFG = {
                          # otherside always set this to None
                          YOUR_HDF_FILE_FULLPATH : None, # '/home/mantosh/Desktop/xyz.hdf'
 
+
+                         # In case of network failure, number of maximum tries to reconnect with network
+                         MAX_ATTEMPTS_TO_DOWNLOAD  : 11,
+
+                         # If the connection dies, wait this long(seconds) before reconnecting
+                         RETRY_TIMEOUT :  15,
 
 
                          # Technically advanced four settings
@@ -29,6 +35,7 @@ MEERA_ANALYZER_CFG = {
 
                          HOME_DIR  : ["data"],    # Home directory over ftp server
                          FILE_TYPE : '*.hdf', # Type of downloading file
+                      
 
                          
 }
