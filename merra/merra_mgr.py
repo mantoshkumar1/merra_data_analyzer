@@ -103,7 +103,7 @@ class merra_tool:
 
 
         # For managing file transfers
-        self.monitor_interval = 2     # seconds (thread will notify the status of download after every THIS seconds
+        self.monitor_interval = 2     # seconds (thread will notify the status of download after every THIS seconds)
         self.ptr = None               # Used to calculate size of downloaded file
         self.max_attempts = 9         # In case of download failure, number of max tries to download
         self.waiting = True           # Used for thread
@@ -262,9 +262,14 @@ class merra_tool:
  
             # download hdf files stored in self.hdffile_list
             for hdf_file in self.hdffile_list:
+                if(self.file_exist_in_db(hdf_file))
+                    print "\n" + hdf_file + " has already been populated in DB"
+                    continue
+                    
+                    
                 print "\n" + "downloading starts for : " + hdf_file
                 print "************************************************************************"
-                #if(self.download_file(hdf_file)):
+                if(self.download_file(hdf_file)):
                 if 0:
                     dwnlded_hdf_full_path = os.path.join(self.download_path, hdf_file)
                     self.process_hdf_file(dwnlded_hdf_full_path, hdf_file)
@@ -273,6 +278,7 @@ class merra_tool:
                     if cfg[STORE_DOWNLOADED_DATA] is False:
                         self.delete_file(hdf_file)
                         print 'file {} is deleted as per user instruction.'.format(hdf_file)
+
 
             self.hdffile_list = [ ]
 
@@ -501,5 +507,19 @@ class merra_tool:
         """
 
         return False
+
+
+    def reset_merra_db(self):
+        """ 
+        Function name : reset_merra_db
+
+        Description   : This function will wipe out every info saved in merra DB (Are you sure to make MERRA DB dumb ?)
+
+        Parameters    : 
+         
+        Return        : 
+        """
+
+        pass
 
  
