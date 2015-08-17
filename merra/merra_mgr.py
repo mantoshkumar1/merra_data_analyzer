@@ -261,7 +261,7 @@ class merra_tool:
  
             # download hdf files stored in self.hdffile_list
             for hdf_file in self.hdffile_list:
-                print "\n" + "downloadnging starts for : " + hdf_file
+                print "\n" + "downloading starts for : " + hdf_file
                 print "************************************************************************"
                 #if(self.download_file(hdf_file)):
                 if 0:
@@ -421,8 +421,8 @@ class merra_tool:
 
 
             if not res.startswith('226 Transfer complete'):
-                logging.error('Downloadeding of file {0} failed.'.format(file_name))
-                print 'Downloadeding of file {0} failed.'.format(file_name)
+                logging.error('Downloading of file {0} failed.'.format(file_name))
+                print 'Downloading of file {0} failed.'.format(file_name)
                 self.delete_file(file_name)
                 return False
 
