@@ -10,3 +10,7 @@ MERRA_DATA_DOWNLINK_ADDR           =     104
 STORE_DOWNLOADED_DATA              =     105
 FTP_DEBUG_LEVEL                    =     106
 USER_EMAIL_ADDR                    =     107
+YOUR_HDF_FILE_FULLPATH             =     108
+
+
+

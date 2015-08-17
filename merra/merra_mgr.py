@@ -26,7 +26,17 @@ if sys.hexversion < 34014704:
     raise ImportError('Merra analyzer tool requires python version 2.7.5 or later')
 
 
+
 def setInterval(interval, times = -1):
+    """
+    Function name : setInterval
+    Description   : Set time interval for thread to display download status
+        
+    Parameters    : times (Integer, time interval for thread to be invoked)
+
+    Return        :
+    """
+
     # This will be the actual decorator, with fixed interval and times parameter
     def outer_wrap(function):
         # This will be the function to be called
@@ -49,6 +59,7 @@ def setInterval(interval, times = -1):
         return wrap
 
     return outer_wrap
+
 
 
 class merra_tool:
@@ -82,32 +93,37 @@ class merra_tool:
         self.login = 'anonymous'
 
         
-        #self.show_progress = True
-        self.directory = ''   # current directory
-        self.dir_list = []
-        self.file_path_list = []
+        self.directory = ''      # current directory over ftp server
+        self.dir_list = [ ]      # subdir list
+        self.hdffile_list = [ ]  # HDF file list
 
 
-        self.connect() # sets self.conn
+        self.connect()           # sets self.conn
 
 
         # For managing file transfers
-        self.monitor_interval = 2
-        self.ptr = None  # used to calculate size of downloaded file
-        self.max_attempts = 11 #change it to 11
-        self.waiting = True
-        self.retry_timeout = 15 # If the connection dies, wait this long before reconnecting
+        self.monitor_interval = 2     # seconds
+        self.ptr = None               # used to calculate size of downloaded file
+        self.max_attempts = 9         # in case of download failure, number of max tries to download
+        self.waiting = True           # used for thread
+        self.retry_timeout = 15       # If the connection dies, wait this long before reconnecting
+
 
 
     def connect(self): 
         """
         Function name : connect
+
         Description   : Connect to FTP server 
+        
+        Parameters    : 
+
         Return        :
         """
 
         try:
             self.conn = ftplib.FTP(self.host, self.login, self.passwd)
+
             
             self.conn.sendcmd("TYPE i") # switching to binary mode because 550 SIZE is not allowed in ASCII mode
  
@@ -133,8 +149,8 @@ class merra_tool:
         print '*** Connected to host "%s"' % self.host
 
         
+        # Welcome message sent by the server
         global run_once
-        # Return the welcome message sent by the server in reply to the initial connection
         if(run_once):
             self.directory = self.conn.pwd()
             print os.linesep #new line
@@ -143,10 +159,15 @@ class merra_tool:
             run_once = 0
      
 
+
     def disconnect(self):
         """
         Function name : disconnect
+
         Description   : close the connection
+        
+        Parameters    : 
+
         Return        :
         """
         
@@ -154,16 +175,22 @@ class merra_tool:
             self.conn.quit()
 
         except ftplib.error_reply, ftplib.error_proto:
-            raise
+            print "Wir danken fur . Auf Wiedersehen!"
+
+
 
     def move_to_dir(self, curr_dir = None):
         """
         Function name : move_to_dir
+
         Description   : Set the current directory on the server
+
+        Parameters    : curr_dir (String, Desired directory name)
+
         Return        :
         """
 
-        try: #moving to directory where desired file is stored over ftp server
+        try:
             if(curr_dir is not None):
                 self.conn.cwd(curr_dir)
 
@@ -172,55 +199,43 @@ class merra_tool:
 
       
         except ftplib.error_perm:
-            print 'ERROR: cannot CD to "%s"' % cfg[HOME_DIR]
-            #self.connect()
+            print 'Error: cannot move to "%s"' % curr_dir
             
  
-    def get_file_list(self):
-        """
-        Function name: get_file_list
-        Description: Return a list of file names using ftplib.nlst
-        """
-       
-        data = []
-
-        
-        try:
-            #data = self.conn.nlst(self.directory)
-            data = self.conn.nlst(cfg[FILE_TYPE])
-
-        except ftplib.error_temp as err:
-            if str(err) == "550 No files found":
-                pass # data remains []
-
-            else:
-                print("Error: {}".format(str(err)))
-
-
-        return data
     
-    def crawl_server(self):
+    def download_hdf_data(self):
         """
         Function name : crwal_server
+
         Description   : Driver function to crwal the server and download
+
+        Parameters    : 
+
         Return        :
         """
+        if cfg[YOUR_HDF_FILE_FULLPATH] is not None:
+            local_file = cfg[YOUR_HDF_FILE_FULLPATH]
+          
+            # Check whether this file exists or not, if yes then populate the DB
+            if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
+                self.populate_merra_db(local_file)
 
-        dir_name = cfg[HOME_DIR]
-        self.crwal_all_dir(dir_name)
+            return
 
 
-        import pdb;pdb.set_trace()
-        # Now ready for download, so let's set the curr_dir to home
-        self.move_to_dir('/.')
-        self.directory = self.conn.pwd()
-        import pdb;pdb.set_trace()
+        for home_dir in cfg[HOME_DIR]:
+            self.crwal_all_dir(home_dir)
+
 
 
     def crwal_all_dir(self, dir_name):
         """
         Function name : crwal_all_dir
+
         Description   : Recursive function - Crwal throughout ftp server
+
+        Parameters    : dir_name (String, name of dir where further crawling will be done)
+
         Return        :
         """
 
@@ -229,11 +244,9 @@ class merra_tool:
         
         if self.isdir(dir_name):
             print("Changing directory from " + self.directory + " to " + dir_name)
-            #parent_dir = self.directory
             self.move_to_dir(dir_name)
 
 
-            #self.conn.cwd(dir_name)
             self.directory = self.conn.pwd()
             print("Current directory: " + self.directory)
 
@@ -241,25 +254,38 @@ class merra_tool:
             # listing all files/subdir inside this directoty
             new_dirs = self.retrive_file_list()
             self.organise_dir_files(new_dirs)
-            #self.conn.retrlines('LIST', self.find_dirs)
+
+             
+            print("Total HDF files found so far inside " + dir_name + ": " + str(len(self.hdffile_list)))
+           
+ 
+            # download hdf files stored in self.hdffile_list
+            for hdf_file in self.hdffile_list:
+                self.download_file(hdf_file)
+                dwnlded_hdf_full_path = os.path.join(self.download_path, hdf_file)
+                self.populate_merra_db(dwnlded_hdf_full_path, hdf_file)
+
+            self.hdffile_list = [ ]
 
 
             new_dirs = self.dir_list
-            #print("Directories inside " + dir_name + " :")
-            #print(new_dirs)
-            print("Total HDF files found so far inside " + dir_name + ": " + str(len(self.file_path_list)))
             for sub_dir in new_dirs:
-                self.dir_list = []
-                self.crwal_all_dir(sub_dir) # recursion 
+                self.dir_list = [ ]
+                self.crwal_all_dir(sub_dir) # recursive function call 
 
 
             self.move_to_dir('..') # come back to own directory when done
-            #self.move_to_dir(parent_dir) # come back to own directory when done
+
+
     
     def organise_dir_files(self, files):
         """
         Function name : organise_dir_files
-        Description   : Store directories name and HDF file name in dir_list and file_path_list respectively
+
+        Description   : Store directories name and HDF file name in dir_list and gdffile_list respectively
+
+        Parameters    : files (List, Names of HDF files and/or sub directories)
+
         Return        :
         """
 
@@ -268,12 +294,18 @@ class merra_tool:
                  self.dir_list.append(entry)
 
             elif entry.endswith('.hdf'):
-                 self.file_path_list.append(os.path.join(self.directory, entry)) # full path
+                 self.hdffile_list.append(entry) # full path
+
+
                  
     def retrive_file_list(self):
         """
         Function name : retrive_file_list
+
         Description   : List all files/subdir inside current directoty
+
+        Parameters    : 
+
         Return        : List of subdir/file names
         """
 
@@ -288,12 +320,17 @@ class merra_tool:
 
                 
         return files
+
             
 
     def isdir(self, dir_name):
         """ 
         Function name : isdir
+
         Description   : Checks whether given subdir in current dir over the FTP server is a directory or not
+
+        Parameters    : dir_name (String, Name of a directory)
+
         Return        : If dir_nam is a directory, returns True
                         else return False
         """
@@ -309,27 +346,15 @@ class merra_tool:
             return False
 
 
-    def download(self):
-        """
-        Function name : download
-        Description   : Download
-        Return        : 
-        """
-
-        self.directory = cfg[HOME_DIR]
-        self.move_to_dir()
-
-
-        file_list = self.get_file_list();
-        for fl in file_list:
-            self.download_file(fl);
-        
 
     def download_file(self, file_name):
-        """ Function name: download_file
+        """
+        Function name: download_file
+
         Description : This method downloads the file from FTP server, tries to re-establish a broken connection, \
                       resumes the file transfer where it left off and shows the download progress
-        Parameter   : file_name (name of downloading HDF file)
+
+        Parameter   : file_name (String, Name of downloading HDF file)
 
         Return      : In case of successful download: True
                       In case of failure : False
@@ -363,7 +388,7 @@ class merra_tool:
                     self.connect()
                     self.move_to_dir()
                     self.waiting = False
-                    # retrieve file from position where we were disconnected
+                    # retrieve file from the position where we were disconnected
                     if f.tell() == 0:
                         res = self.conn.retrbinary('RETR %s' % file_name, f.write)
                     else:
@@ -378,8 +403,10 @@ class merra_tool:
 
                     self.waiting = True
                     logging.info('waiting {} sec...'.format(self.retry_timeout))
+                    print 'waiting {} sec...'.format(self.retry_timeout)
                     time.sleep(self.retry_timeout)
                     logging.info('reconnect')
+                    print 'reconnect'
 
 
             mon.set() #stop monitor
@@ -387,12 +414,13 @@ class merra_tool:
 
             if not res.startswith('226 Transfer complete'):
                 logging.error('Downloadeding of file {0} failed.'.format(file_name))
+                print 'Downloadeding of file {0} failed.'.format(file_name)
                 os.remove(os.path.join(self.download_path, file_name))
                 return False
 
             else:
                 logging.info('file {} successfully downloaded.'.format(file_name))
-                #print '\nfile {} successfully downloaded.'.format(file_name)
+                print 'file {} successfully downloaded.'.format(file_name)
                 if cfg[STORE_DOWNLOADED_DATA] is False:
                     os.remove(os.path.join(self.download_path, file_name))
                     print 'file {} is deleted as per user instruction.'.format(file_name)
@@ -400,3 +428,24 @@ class merra_tool:
             return True
 
 
+
+    def populate_merra_db(self, full_path, file_name = None):
+        """ 
+        Function name : populate_merra_db
+
+        Description   : Populates Merra DB
+
+        Parameters    : Scenario 1: If user has specified an already downloaded HDF file, then this function doesn't \
+                        need file_name (= None) and obviously this file_name (= None) will not be updated in download_file_db. \
+         
+                        Scenario 2: If this tool is crawling all over ftp server, then this function needs full_path \
+                        and name of the downloaded hdf file
+
+        Return        : 
+
+        """
+
+        pass
+
+
+ 

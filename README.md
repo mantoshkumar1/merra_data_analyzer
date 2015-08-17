@@ -4,7 +4,7 @@
 
 This README document contains all the informations that are necessary to get this application up and running.
 
-### How to use tool ###
+### How to use this tool ###
 ---------------------------------------------------------------------------------------------------
 $ cd merra_analyzer
 $ export PYTHONPATH=$PWD
@@ -15,7 +15,7 @@ $ create database merra; (Set this DB_NAME in cfg.py)
 $ \c merra;  (connect to DB)
 $ \q         (exit from psql prompt)
 
-### What is this repository for? ###
+### Where is its repository? ###
 
 * MERRA DATA ANALYZER (write a short description)
 * Version : 1.0
@@ -157,7 +157,7 @@ $ \q         (exit from psql prompt)
 
 
 
-10########3. sudo pip install matplotlib mpl_toolkits psycopg2
+10. sudo pip install matplotlib mpl_toolkits psycopg2
 
 11. $ sudo apt-get update
     $ sudo apt-get upgrade
