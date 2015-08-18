@@ -157,7 +157,7 @@ $ \q         (exit from psql prompt)
 
 
 
-10. sudo pip install matplotlib mpl_toolkits psycopg2
+10. $ sudo pip install matplotlib mpl_toolkits psycopg2
 
 11. $ sudo apt-get update
     $ sudo apt-get upgrade
