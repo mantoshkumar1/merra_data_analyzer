@@ -7,15 +7,15 @@ from merra.merra_constants import *
 # NOTE: By default every field is assigned values, you can change a/o your need
 
 MEERA_ANALYZER_CFG = {  
+                         # Use below setting only&only if you want to use an already downloaded specific HDF file, \ 
+                         # otherside always set this to None (No connection with internet is needed for this case)
+                         YOUR_HDF_FILE_FULLPATH : None, # '/home/mantosh/Desktop/xyz.hdf'
+
+
+
                          # General two settings
                          MERRA_DATA_DOWNLOAD_PATH  : './merra_downloaded_data',
-                         SAVE_DOWNLOADED_DATA : True, # Set to True if you want to store downloaded files
-
-                         
-                        
-                         # Use below setting only&only if you want to use a specific already downloaded HDF file, \ 
-                         # otherside always set this to None
-                         YOUR_HDF_FILE_FULLPATH : None, # '/home/mantosh/Desktop/xyz.hdf'
+                         SAVE_DOWNLOADED_DATA : False, # Set to True if you want to store downloaded files
 
 
                          # In case of network failure, number of maximum tries to reconnect with network
