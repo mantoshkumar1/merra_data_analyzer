@@ -94,7 +94,6 @@ class merra_tool:
 
         
         self.directory    =  ''       # A temp variable - keeps current directory of the ftp server
-        self.curr_dir     =  ''       # keeps updated Pathname of the current directory on the ftp server
         self.dir_list     =  [ ]      # List of sub directory
         self.hdffile_list =  [ ]      # List of HDF file
 
@@ -474,19 +473,6 @@ class merra_tool:
         except OSError:
             pass
 
-
-    def ftp_pwd(self):
-        """ 
-        Function name : ftp_pwd
-
-        Description   : Update pathname of the current directory on the server
-
-        Parameters    : 
-        
-        Return        : 
-
-        """
-        pass
 
 
     def shutdown(self):
