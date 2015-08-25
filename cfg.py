@@ -14,7 +14,7 @@ MEERA_ANALYZER_CFG = {
                          # Note: If you enable this setting then below all other settings will automatically become idle \
                          #       - except PROCESSING_FILE_TYPE
 
-                         YOUR_DOWNLOADED_HDFFILE_DIR_PATH: None, # '../hdf_data',
+                         YOUR_DOWNLOADED_HDFFILE_DIR_PATH: None, # '../my_hdf_data',
 
 
 
