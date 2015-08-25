@@ -25,7 +25,7 @@ MEERA_ANALYZER_CFG = {
                          RETRY_TIMEOUT :  15,
 
 
-                         # Technically advanced four settings
+                         # Technically advanced five settings
                          USER_EMAIL_ADDR : 'demo@tum.de', # NASA uses email as password for login (even dummy email will work)
 
                          HOST_ADDR : 'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
