@@ -251,7 +251,7 @@ class merra_tool:
          
             for local_file in files_path_list:
 
-                # Check whether this file exists or not, if yes then populate the DB
+                # Check whether you have permission to access this file or not and it exist or not, if yes then populate the DB
                 if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
                     self.process_hdf_file(local_file)
 
