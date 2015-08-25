@@ -467,7 +467,7 @@ class merra_tool:
                     print 'waiting {} sec...'.format(self.retry_timeout)
                     time.sleep(self.retry_timeout)
                     logging.info('reconnect')
-                    print 'reconnect'
+                    print 'reconnecting'
 
 
             #stop monitor
@@ -545,15 +545,26 @@ class merra_tool:
         
         Return        : List of strings(paths of HDF files)
 
-        Note          : If directory doesn't exist then it returns empty list
-
         """
 
         files_path_list = [ ]
 
+        if(False == os.path.isdir(dir_path)):
+            print "********************************************************************"
+            print "Directory " + dir_path + " doesn't exist"
+            print "Set correct path in  YOUR_DOWNLOADED_HDFFILE_DIR_PATH in cfg.py"
+            print "********************************************************************"
+            return files_path_list
+
+
         for dirpath, dirnames, filenames in os.walk(dir_path):
             for filename in [f for f in filenames if f.endswith(cfg[PROCESSING_FILE_TYPE])]:
                 files_path_list.append(os.path.join(dirpath, filename))
+
+
+        if not files_path_list: # empty list
+            print "There is no HDF file inside " + dir_path + " directory"
+
 
         return files_path_list
 
