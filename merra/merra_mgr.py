@@ -13,7 +13,7 @@ import time
 import threading
 
 
-# importing merra tool package
+# importing merra tool modules
 import cfg
 from merra.merra_constants import *
 
@@ -184,7 +184,7 @@ class merra_tool:
         """
         Function name : disconnect
 
-        Description   : Close the connection
+        Description   : Close the connection politely
         
         Parameters    : 
 
@@ -333,7 +333,7 @@ class merra_tool:
 
         Description   : Store directories name and HDF file name in dir_list and gdffile_list respectively
 
-        Parameters    : files (List, Names of HDF files and/or sub directories)
+        Parameters    : files (List, Names of HDF files and/or sub directories which are strings)
 
         Return        :
         """
@@ -351,11 +351,11 @@ class merra_tool:
         """
         Function name : retrive_file_list
 
-        Description   : List all files/subdir inside current directoty
+        Description   : Find all the files/subdirs inside current directoty
 
         Parameters    : 
 
-        Return        : List of subdir/file names
+        Return        : List of Strings (List of subdir/file names)
         """
 
         files = []
@@ -514,7 +514,7 @@ class merra_tool:
         """ 
         Function name : shutdown
 
-        Description   : Terminates program
+        Description   : Terminates program forcefully
 
         Parameters    : 
         
@@ -539,11 +539,11 @@ class merra_tool:
         """ 
         Function name : find_files_in_dir
 
-        Description   : List all the HDF files stored inside given directory and its subdirectories
+        Description   : Find all the HDF files stored inside given directory and its subdirectories
 
-        Parameters    : dir_path (Name of parent directory where you want to search HDF files)
+        Parameters    : dir_path [String, Relative/Absolute Path of parent directory inside which you want to search HDF files) ]
         
-        Return        : List (paths of HDF files)
+        Return        : List of strings(paths of HDF files)
 
         """
 
@@ -564,7 +564,7 @@ class merra_tool:
         Description   : This is a bridge function between web crawl and DB functions. 
                         This function sends file to DB function for extraction and processing and populating Merra DB.
 
-        Parameters    : Scenario 1: If user has specified an locally downloaded HDF file, then this function \
+                        Scenario 1: If user has specified an locally downloaded HDF file, then this function \
                         doesn't need file_name (= None) and obviously this file_name (= None) will not be updated \
                         in downloaded_hdf_files_db
          
@@ -572,8 +572,8 @@ class merra_tool:
                         and name of the downloaded hdf file
 
 
-                        full_path: Full path of the hdf file
-                        file_name: Name of hdf file
+        Parameters    : full_path: (String, Relative/Absolute path of the hdf file upto its immediate parent directory)
+                        file_name: (String, Name of hdf file)
 
         Return        : 
 
