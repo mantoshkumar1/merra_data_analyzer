@@ -433,7 +433,7 @@ class merra_tool:
                     i = f.tell()
                     if self.ptr < i:
                         logging.debug("%d - %0.1f Kb/s" % (i, (i-self.ptr)/(1024*self.monitor_interval)))
-                        print "Downloading status: %d / %d   -  %0.1f Kb/s" % (i, remote_filesize, \
+                        print "Downloading status: %d / %d bits  -  %0.1f Kb/s" % (i, remote_filesize, \
                                                                               (i-self.ptr)/(1024*self.monitor_interval))
                         self.ptr = i
 
