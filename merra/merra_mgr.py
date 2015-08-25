@@ -563,7 +563,9 @@ class merra_tool:
 
 
         if not files_path_list: # empty list
+            print "\n********************************************************************"
             print "There is no HDF file inside " + dir_path + " directory"
+            print "********************************************************************\n"
 
 
         return files_path_list
