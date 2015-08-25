@@ -8,24 +8,28 @@ from merra.merra_constants import *
 
 MEERA_ANALYZER_CFG = {  
                          # Use below setting only&only if you want to use already downloaded HDF files. \ 
-                         # Otherside always set it to None (No connection with internet is needed for this case) \
+                         # Otherside always set it to None (No connection with internet is needed for this case).
+                         #
                          # If you want to enable this setting, Enter the parent directory path of the downloaded files, \
-                         #    - it will find all the hdf files stored inside this directory & its subdirectories \
-                         # Note: If you enable this setting then below all other settings will automatically become idle \
-                         #       - except PROCESSING_FILE_TYPE
+                         #    - it will find all the hdf files stored inside this directory & its subdirectories.
+                         #
+                         # Note: If you enable this setting then all below other settings will automatically become idle \
+                         #       - except PROCESSING_FILE_TYPE.
+                         YOUR_DOWNLOADED_HDFFILE_DIR_PATH   :   None, # '../mantosh_system/my_hdf_data',
 
-                         YOUR_DOWNLOADED_HDFFILE_DIR_PATH: None, # '../my_hdf_data',
 
 
-
-                         # Two General settings
+                         # Three General settings
                          ########################################################################################################
 
-                         # 1. Directory where you want to download HDF files
-                         MERRA_DATA_DOWNLOAD_DIR_PATH  : './merra_downloaded_data',
+                         # 1. Directory path where you want to download HDF files
+                         MERRA_DATA_DOWNLOAD_DIR_PATH  :  './merra_downloaded_data',
 
-                         # 2. Set to True if you want to store downloaded files
-                         SAVE_DOWNLOADED_DATA  : False,
+                         # 2. Set to True if you want to store downloaded files in above directory
+                         SAVE_DOWNLOADED_DATA          :  False,
+
+                         # 3. NASA FTP server uses email as password for login (even dummy email will work)
+                         USER_EMAIL_ADDR      :  'demo@tum.de',
 
                          ########################################################################################################
 
@@ -34,27 +38,31 @@ MEERA_ANALYZER_CFG = {
                          # Two network failure settings
                          ########################################################################################################
 
-                         # In case of network failure, number of maximum tries to reconnect with network
-                         MAX_ATTEMPTS_TO_DOWNLOAD : 11,
+                         # 1. In case of network failure, number of maximum tries to reconnect with network
+                         MAX_ATTEMPTS_TO_DOWNLOAD :  11,
 
-                         # If the connection dies, wait this long(seconds) before reconnecting
-                         RETRY_TIMEOUT :  15,
+                         # 2. If the connection dies, wait this long(seconds) before reconnecting
+                         RETRY_TIMEOUT            :  15,
 
                          ########################################################################################################
 
 
-                         # Technically advanced five settings
+
+                         # Five technically advanced settings ( Caution: Are you sure to change it? )
                          ########################################################################################################
                          
-                         USER_EMAIL_ADDR : 'demo@tum.de', # NASA uses email as password for login (even dummy email will work)
+                         # 1. FTP host address
+                         FTP_HOST_ADDR        :  'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
 
-                         FTP_HOST_ADDR   : 'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
+                         # 2. Use this setting to observe interacton of this tool with ftp server
+                         #    0 = none, 1 = some output, 2 = max debugging output
+                         FTP_DEBUG_LEVEL      :  0,
 
-                         FTP_DEBUG_LEVEL : 0, # 0 = none, 1 = some output, 2 = max debugging output \
-                                              # Use this setting to observe interacton of this tool with ftp server
+                         # 3. Home directory over ftp server
+                         FTP_HOME_DIR         :  ["data"],
 
-                         FTP_HOME_DIR         : ["data"],    # Home directory over ftp server
-                         PROCESSING_FILE_TYPE : '.hdf',     # Type of downloading/processing file
+                         # 4. Type of downloading/processing file
+                         PROCESSING_FILE_TYPE :  '.hdf',
 
                          ########################################################################################################
                       
