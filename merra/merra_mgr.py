@@ -156,6 +156,11 @@ class merra_tool:
         except ftplib.error_perm as err:
             print("Error: {}".format(str(err)))
             return
+      
+ 
+        except:
+            print ("An error occured")
+            return
 
         
         print '*** Connected to host "%s"' % self.host
@@ -189,6 +194,8 @@ class merra_tool:
         except (ftplib.error_reply, ftplib.error_proto):
             print "Wir danken fur . Auf Wiedersehen!"
 
+        except:
+            print "FTP server wanted to spend more time with you :( ... Anyway GoodBye!"
 
 
     def move_to_dir(self, curr_dir = None):
@@ -213,6 +220,9 @@ class merra_tool:
         except ftplib.error_perm:
             print 'Error: cannot move to "%s"' % curr_dir
             
+
+        except:
+            print 'Some error occured'
  
     
     def download_hdf_data(self):
@@ -344,7 +354,11 @@ class merra_tool:
                 print "No files in this directory"
                 pass # files remains []
 
-                
+        except:
+            print "Some error occured"
+            pass # files remains []
+            
+
         return files
 
             
@@ -370,6 +384,10 @@ class merra_tool:
 
         except ftplib.all_errors:
             return False
+
+        except:
+            print "Some error occured"
+            raise
 
 
 
@@ -473,6 +491,8 @@ class merra_tool:
             os.remove(file_full_path)
         except OSError:
             pass
+        except:
+            pass
 
 
 
@@ -492,9 +512,12 @@ class merra_tool:
         print "Internet / FTP server down"
         print "Program Terminating"
         print "***************************************************"          
- 
-        self.conn.close()
-        sys.exit(0)
+
+        try: 
+            self.conn.close()
+            sys.exit(0)
+        except:
+            pass
 
 
     def process_hdf_file(self, full_path, file_name = None):
