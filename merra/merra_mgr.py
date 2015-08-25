@@ -301,7 +301,7 @@ class merra_tool:
                     continue
                     
                     
-                print "\n" + "downloading starts for : " + hdf_file
+                print "\n" + "Downloading starts for : " + hdf_file
                 print "************************************************************************"
                 if(self.download_file(hdf_file)):
                 #if 0:
