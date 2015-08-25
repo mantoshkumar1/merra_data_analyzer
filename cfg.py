@@ -9,13 +9,13 @@ from merra.merra_constants import *
 MEERA_ANALYZER_CFG = {  
                          # Use below setting only&only if you want to use an already downloaded specific HDF file, \ 
                          # otherside always set this to None (No connection with internet is needed for this case)
-                         YOUR_HDF_FILE_FULLPATH : None, # '/home/mantosh/Desktop/xyz.hdf'
+                         YOUR_HDF_FILE_PATH : None, # '/home/mantosh/Desktop/xyz.hdf'
 
 
 
-                         # General two settings
-                         MERRA_DATA_DOWNLOAD_PATH  : './merra_downloaded_data',
-                         SAVE_DOWNLOADED_DATA : False, # Set to True if you want to store downloaded files
+                         # Two General settings
+                         MERRA_DATA_DOWNLOAD_DIR  : './merra_downloaded_data',
+                         SAVE_DOWNLOADED_DATA     : False, # Set to True if you want to store downloaded files
 
 
                          # In case of network failure, number of maximum tries to reconnect with network
@@ -34,7 +34,7 @@ MEERA_ANALYZER_CFG = {
                                               # Use this setting to observe interacton of this tool with ftp server
 
                          HOME_DIR  : ["data"],    # Home directory over ftp server
-                         FILE_TYPE : '*.hdf', # Type of downloading file
+                         FILE_TYPE : '*.hdf',     # Type of downloading file
                       
 
                          

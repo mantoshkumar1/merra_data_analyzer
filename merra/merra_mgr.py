@@ -72,8 +72,8 @@ class merra_tool:
             self.host = 'goldsmr2.sci.gsfc.nasa.gov' # '169.154.132.64' (Both are same. Ping this web addr, you will get ip addr)
 
 
-        if cfg.has_key(MERRA_DATA_DOWNLOAD_PATH) and cfg.get(MERRA_DATA_DOWNLOAD_PATH) is not None:
-            self.download_path = cfg[MERRA_DATA_DOWNLOAD_PATH]
+        if cfg.has_key(MERRA_DATA_DOWNLOAD_DIR) and cfg.get(MERRA_DATA_DOWNLOAD_DIR) is not None:
+            self.download_path = cfg[MERRA_DATA_DOWNLOAD_DIR]
         else:
             self.download_path = './merra_downloaded_data'
 
@@ -225,8 +225,8 @@ class merra_tool:
 
         Return        :
         """
-        if cfg[YOUR_HDF_FILE_FULLPATH] is not None:
-            local_file = cfg[YOUR_HDF_FILE_FULLPATH]
+        if cfg[YOUR_HDF_FILE_PATH] is not None:
+            local_file = cfg[YOUR_HDF_FILE_PATH]
           
             # Check whether this file exists or not, if yes then populate the DB
             if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
