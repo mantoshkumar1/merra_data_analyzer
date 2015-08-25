@@ -426,6 +426,7 @@ class merra_tool:
                     num_attempts -= 1
                     if num_attempts == 0:
                         mon.set()
+                        self.delete_file(file_name)
                         #logging.exception('')
                         self.shutdown()
 
