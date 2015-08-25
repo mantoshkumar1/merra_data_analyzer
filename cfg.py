@@ -29,7 +29,7 @@ MEERA_ANALYZER_CFG = {
                          SAVE_DOWNLOADED_DATA          :  False,
 
                          # 3. NASA FTP server uses email as password for login (even dummy email will work)
-                         USER_EMAIL_ADDR      :  'demo@tum.de',
+                         USER_EMAIL_ADDR               :  'demo@tum.de',
 
                          ########################################################################################################
 
