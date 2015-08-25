@@ -7,10 +7,10 @@ from merra.merra_constants import *
 # NOTE: By default every field is assigned values, you can change a/o your need
 
 MEERA_ANALYZER_CFG = {  
-                         # Use below setting only&only if you want to use an already downloaded specific HDF file, \ 
-                         # otherside always set this to None (No connection with internet is needed for this case) \
-                         # If want to enable it, Enter the Parent directory name of the downloaded files, it will- \
-                         #    - find all the hdf files stored in subdirectory also
+                         # Use below setting only&only if you want to use already downloaded HDF files. \ 
+                         # Otherside always set it to None (No connection with internet is needed for this case) \
+                         # If you want to enable this setting, Enter the parent directory path of the downloaded files, \
+                         #    - it will find all the hdf files stored inside this directory & its subdirectories
                          # Note: If you enable this setting then all other settings will automatically become idle.
                          YOUR_DOWNLOADED_HDFFILE_DIR_PATH: None, # '../hdf_data',
 
