@@ -8,7 +8,8 @@ from merra.merra_constants import *
 
 MEERA_ANALYZER_CFG = {  
                          # Use below setting only&only if you want to use an already downloaded specific HDF file, \ 
-                         # otherside always set this to None (No connection with internet is needed for this case)
+                         # otherside always set this to None (No connection with internet is needed for this case) \
+                         # Note: If you enable this setting then all other settings will automatically become idle.
                          YOUR_HDF_FILE_PATH : None, # '/home/mantosh/Desktop/xyz.hdf'
 
 
