@@ -303,8 +303,8 @@ class merra_tool:
                     
                 print "\n" + "downloading starts for : " + hdf_file
                 print "************************************************************************"
-                if(self.download_file(hdf_file)):
-                #if 0:
+                #if(self.download_file(hdf_file)):
+                if 0:
                     dwnlded_hdf_full_path = os.path.join(self.download_path, hdf_file)
                     self.process_hdf_file(dwnlded_hdf_full_path, hdf_file)
  
@@ -550,10 +550,10 @@ class merra_tool:
         files_path_list = [ ]
 
         if(False == os.path.isdir(dir_path)):
-            print "********************************************************************"
-            print "Directory " + dir_path + " doesn't exist"
+            print "\n********************************************************************"
+            print "Directory " + dir_path + " doesn't exist\n"
             print "Set correct path in  YOUR_DOWNLOADED_HDFFILE_DIR_PATH in cfg.py"
-            print "********************************************************************"
+            print "********************************************************************\n"
             return files_path_list
 
 
