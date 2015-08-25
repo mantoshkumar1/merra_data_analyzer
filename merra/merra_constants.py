@@ -2,6 +2,7 @@
 # This file is part of merra_data_analyzer, a high-level ftp-protocol big size recursive file downloader and merra file analyser.
 # Copyright : Mantosh Kumar @ TUM, Germany
 
+# Define constants here
 MERRA_DATA_DOWNLOAD_DIR            =     100
 FTP_HOST_ADDR                      =     101
 FTP_HOME_DIR                       =     102
