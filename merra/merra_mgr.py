@@ -572,7 +572,7 @@ class merra_tool:
                         and name of the downloaded hdf file
 
 
-        Parameters    : full_path: (String, Relative/Absolute path of the hdf file upto its immediate parent directory)
+        Parameters    : full_path: (String, Relative/Absolute full path of the hdf file)
                         file_name: (String, Name of hdf file)
 
         Return        : 
