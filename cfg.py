@@ -22,7 +22,7 @@ MEERA_ANALYZER_CFG = {
 
 
                          # In case of network failure, number of maximum tries to reconnect with network
-                         MAX_ATTEMPTS_TO_DOWNLOAD  : 11,
+                         MAX_ATTEMPTS_TO_DOWNLOAD : 11,
 
                          # If the connection dies, wait this long(seconds) before reconnecting
                          RETRY_TIMEOUT :  15,
@@ -31,13 +31,13 @@ MEERA_ANALYZER_CFG = {
                          # Technically advanced five settings
                          USER_EMAIL_ADDR : 'demo@tum.de', # NASA uses email as password for login (even dummy email will work)
 
-                         HOST_ADDR : 'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
+                         FTP_HOST_ADDR   : 'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
 
                          FTP_DEBUG_LEVEL : 0, # 0 = none, 1 = some output, 2 = max debugging output \
                                               # Use this setting to observe interacton of this tool with ftp server
 
-                         HOME_DIR  : ["data"],    # Home directory over ftp server
-                         FILE_TYPE : '.hdf',     # Type of downloading file
+                         FTP_HOME_DIR         : ["data"],    # Home directory over ftp server
+                         PROCESSING_FILE_TYPE : '.hdf',     # Type of downloading/processing file
                       
                          
 }

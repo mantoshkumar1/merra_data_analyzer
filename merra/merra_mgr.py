@@ -69,8 +69,8 @@ class merra_tool:
         if cfg[YOUR_DOWNLOADED_HDFFILE_DIR_PATH] is not None:
             return
         
-        if cfg.has_key(HOST_ADDR) and cfg.get(HOST_ADDR) is not None:
-            self.host = cfg[HOST_ADDR]
+        if cfg.has_key(FTP_HOST_ADDR) and cfg.get(FTP_HOST_ADDR) is not None:
+            self.host = cfg[FTP_HOST_ADDR]
         else:
             self.host = 'goldsmr2.sci.gsfc.nasa.gov' # '169.154.132.64' (Both are same. Ping this web addr, you will get ip addr)
 
@@ -258,7 +258,7 @@ class merra_tool:
             return
                 
 
-        for home_dir in cfg[HOME_DIR]:
+        for home_dir in cfg[FTP_HOME_DIR]:
             self.crwal_all_dir(home_dir)
 
 
@@ -342,7 +342,7 @@ class merra_tool:
             if self.isdir(entry):
                  self.dir_list.append(entry)
 
-            elif entry.endswith(cfg[FILE_TYPE]):
+            elif entry.endswith(cfg[PROCESSING_FILE_TYPE]):
                  self.hdffile_list.append(entry) # full path
 
 
@@ -550,7 +550,7 @@ class merra_tool:
         files_path_list = [ ]
 
         for dirpath, dirnames, filenames in os.walk(dir_path):
-            for filename in [f for f in filenames if f.endswith(cfg[FILE_TYPE])]:
+            for filename in [f for f in filenames if f.endswith(cfg[PROCESSING_FILE_TYPE])]:
                 files_path_list.append(os.path.join(dirpath, filename))
 
         return files_path_list
