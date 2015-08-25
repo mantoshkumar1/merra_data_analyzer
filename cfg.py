@@ -9,8 +9,10 @@ from merra.merra_constants import *
 MEERA_ANALYZER_CFG = {  
                          # Use below setting only&only if you want to use an already downloaded specific HDF file, \ 
                          # otherside always set this to None (No connection with internet is needed for this case) \
+                         # If want to enable it, Enter the Parent directory name of the downloaded files, it will- \
+                         #    - find all the hdf files stored in subdirectory also
                          # Note: If you enable this setting then all other settings will automatically become idle.
-                         YOUR_HDF_FILE_PATH : None, # '/home/mantosh/Desktop/xyz.hdf'
+                         YOUR_DOWNLOADED_HDFFILE_DIR_PATH: None, # '../hdf_data',
 
 
 
@@ -35,9 +37,8 @@ MEERA_ANALYZER_CFG = {
                                               # Use this setting to observe interacton of this tool with ftp server
 
                          HOME_DIR  : ["data"],    # Home directory over ftp server
-                         FILE_TYPE : '*.hdf',     # Type of downloading file
+                         FILE_TYPE : '.hdf',     # Type of downloading file
                       
-
                          
 }
 

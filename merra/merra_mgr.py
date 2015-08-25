@@ -65,6 +65,9 @@ def setInterval(interval, times = -1):
 class merra_tool:
 
     def __init__(self):
+
+        if cfg[YOUR_DOWNLOADED_HDFFILE_DIR_PATH] is not None:
+            return
         
         if cfg.has_key(HOST_ADDR) and cfg.get(HOST_ADDR) is not None:
             self.host = cfg[HOST_ADDR]
@@ -187,15 +190,21 @@ class merra_tool:
 
         Return        :
         """
+
+        if cfg[YOUR_DOWNLOADED_HDFFILE_DIR_PATH] is not None:
+            print "Wir danken fur . Auf Wiedersehen!"
+            print "Thank you for using this application!"
+            return
         
         try:
             self.conn.quit()
 
         except (ftplib.error_reply, ftplib.error_proto):
+            print "NASA ftp server will miss your company :( ... Anyway GoodBye!"
             print "Wir danken fur . Auf Wiedersehen!"
 
         except:
-            print "FTP server wanted to spend more time with you :( ... Anyway GoodBye!"
+            print "NASA ftp server will miss your company :( ... Anyway GoodBye!"
 
 
     def move_to_dir(self, curr_dir = None):
@@ -235,15 +244,19 @@ class merra_tool:
 
         Return        :
         """
-        if cfg[YOUR_HDF_FILE_PATH] is not None:
-            local_file = cfg[YOUR_HDF_FILE_PATH]
-          
-            # Check whether this file exists or not, if yes then populate the DB
-            if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
-                self.process_hdf_file(local_file)
+
+        if cfg[YOUR_DOWNLOADED_HDFFILE_DIR_PATH] is not None:
+
+            files_path_list = self.find_files_in_dir(cfg[YOUR_DOWNLOADED_HDFFILE_DIR_PATH])
+         
+            for local_file in files_path_list:
+
+                # Check whether this file exists or not, if yes then populate the DB
+                if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
+                    self.process_hdf_file(local_file)
 
             return
-
+                
 
         for home_dir in cfg[HOME_DIR]:
             self.crwal_all_dir(home_dir)
@@ -329,7 +342,7 @@ class merra_tool:
             if self.isdir(entry):
                  self.dir_list.append(entry)
 
-            elif entry.endswith('.hdf'):
+            elif entry.endswith(cfg[FILE_TYPE]):
                  self.hdffile_list.append(entry) # full path
 
 
@@ -474,6 +487,7 @@ class merra_tool:
             return True
 
 
+
     def delete_file(self, file_name):
         """ 
         Function name : delete_file
@@ -520,6 +534,29 @@ class merra_tool:
             pass
 
 
+
+    def find_files_in_dir(self, dir_path):
+        """ 
+        Function name : find_files_in_dir
+
+        Description   : List all the HDF files stored inside given directory and its subdirectories
+
+        Parameters    : dir_path (Name of parent directory where you want to search HDF files)
+        
+        Return        : List (paths of HDF files)
+
+        """
+
+        files_path_list = [ ]
+
+        for dirpath, dirnames, filenames in os.walk(dir_path):
+            for filename in [f for f in filenames if f.endswith(cfg[FILE_TYPE])]:
+                files_path_list.append(os.path.join(dirpath, filename))
+
+        return files_path_list
+
+
+
     def process_hdf_file(self, full_path, file_name = None):
         """ 
         Function name : process_hdf_file
@@ -533,6 +570,10 @@ class merra_tool:
          
                         Scenario 2: If this tool is crawling all over ftp server, then this function needs full_path \
                         and name of the downloaded hdf file
+
+
+                        full_path: Full path of the hdf file
+                        file_name: Name of hdf file
 
         Return        : 
 
