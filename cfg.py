@@ -13,7 +13,7 @@ MEERA_ANALYZER_CFG = {
                          # If you want to enable this setting, Enter the parent directory path of the downloaded files, \
                          #    - it will find all the hdf files stored inside this directory & its subdirectories.
                          #
-                         # Note: If you enable this setting then all below other settings will automatically become idle \
+                         # Note: If you enable this setting then all below other settings will automatically become idle - \
                          #       - except PROCESSING_FILE_TYPE.
                          YOUR_DOWNLOADED_HDFFILE_DIR_PATH   :   None, # '../mantosh_system/my_hdf_data',
 
@@ -48,7 +48,7 @@ MEERA_ANALYZER_CFG = {
 
 
 
-                         # Five technically advanced settings ( Caution: Are you sure to change it? )
+                         # Four technically advanced settings ( Caution: Are you sure to change it? )
                          ########################################################################################################
                          
                          # 1. FTP host address
