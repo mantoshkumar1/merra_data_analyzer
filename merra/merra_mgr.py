@@ -545,6 +545,8 @@ class merra_tool:
         
         Return        : List of strings(paths of HDF files)
 
+        Note          : If directory doesn't exist then it returns empty list
+
         """
 
         files_path_list = [ ]
