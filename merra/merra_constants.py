@@ -3,7 +3,7 @@
 # Copyright : Mantosh Kumar @ TUM, Germany
 
 # Define constants here
-MERRA_DATA_DOWNLOAD_DIR            =     100
+MERRA_DATA_DOWNLOAD_DIR_PATH       =     100
 FTP_HOST_ADDR                      =     101
 FTP_HOME_DIR                       =     102
 PROCESSING_FILE_TYPE               =     103

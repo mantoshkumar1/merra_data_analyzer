@@ -10,16 +10,29 @@ MEERA_ANALYZER_CFG = {
                          # Use below setting only&only if you want to use already downloaded HDF files. \ 
                          # Otherside always set it to None (No connection with internet is needed for this case) \
                          # If you want to enable this setting, Enter the parent directory path of the downloaded files, \
-                         #    - it will find all the hdf files stored inside this directory & its subdirectories
-                         # Note: If you enable this setting then all other settings will automatically become idle.
+                         #    - it will find all the hdf files stored inside this directory & its subdirectories \
+                         # Note: If you enable this setting then below all other settings will automatically become idle \
+                         #       - except PROCESSING_FILE_TYPE
+
                          YOUR_DOWNLOADED_HDFFILE_DIR_PATH: None, # '../hdf_data',
 
 
 
                          # Two General settings
-                         MERRA_DATA_DOWNLOAD_DIR  : './merra_downloaded_data',
-                         SAVE_DOWNLOADED_DATA     : False, # Set to True if you want to store downloaded files
+                         ########################################################################################################
 
+                         # 1. Directory where you want to download HDF files
+                         MERRA_DATA_DOWNLOAD_DIR_PATH  : './merra_downloaded_data',
+
+                         # 2. Set to True if you want to store downloaded files
+                         SAVE_DOWNLOADED_DATA  : False,
+
+                         ########################################################################################################
+
+
+
+                         # Two network failure settings
+                         ########################################################################################################
 
                          # In case of network failure, number of maximum tries to reconnect with network
                          MAX_ATTEMPTS_TO_DOWNLOAD : 11,
@@ -27,8 +40,12 @@ MEERA_ANALYZER_CFG = {
                          # If the connection dies, wait this long(seconds) before reconnecting
                          RETRY_TIMEOUT :  15,
 
+                         ########################################################################################################
+
 
                          # Technically advanced five settings
+                         ########################################################################################################
+                         
                          USER_EMAIL_ADDR : 'demo@tum.de', # NASA uses email as password for login (even dummy email will work)
 
                          FTP_HOST_ADDR   : 'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
@@ -38,6 +55,8 @@ MEERA_ANALYZER_CFG = {
 
                          FTP_HOME_DIR         : ["data"],    # Home directory over ftp server
                          PROCESSING_FILE_TYPE : '.hdf',     # Type of downloading/processing file
+
+                         ########################################################################################################
                       
                          
 }

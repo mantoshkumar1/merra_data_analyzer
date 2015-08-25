@@ -75,8 +75,8 @@ class merra_tool:
             self.host = 'goldsmr2.sci.gsfc.nasa.gov' # '169.154.132.64' (Both are same. Ping this web addr, you will get ip addr)
 
 
-        if cfg.has_key(MERRA_DATA_DOWNLOAD_DIR) and cfg.get(MERRA_DATA_DOWNLOAD_DIR) is not None:
-            self.download_path = cfg[MERRA_DATA_DOWNLOAD_DIR]
+        if cfg.has_key(MERRA_DATA_DOWNLOAD_DIR_PATH) and cfg.get(MERRA_DATA_DOWNLOAD_DIR_PATH) is not None:
+            self.download_path = cfg[MERRA_DATA_DOWNLOAD_DIR_PATH]
         else:
             self.download_path = './merra_downloaded_data'
 
