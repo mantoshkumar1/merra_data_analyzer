@@ -206,6 +206,10 @@ class merra_tool:
         except:
             print "NASA ftp server will miss your company :( ... Anyway GoodBye!"
 
+        else:
+            print "Thank you for using this application!"
+            
+
 
     def move_to_dir(self, curr_dir = None):
         """
@@ -303,8 +307,8 @@ class merra_tool:
                     
                 print "\n" + "Downloading starts for : " + hdf_file
                 print "************************************************************************"
-                if(self.download_file(hdf_file)):
-                #if 0:
+                #if(self.download_file(hdf_file)):
+                if 0:
                     dwnlded_hdf_full_path = os.path.join(self.download_path, hdf_file)
                     self.process_hdf_file(dwnlded_hdf_full_path, hdf_file)
  
