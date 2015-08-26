@@ -19,7 +19,7 @@ MEERA_ANALYZER_CFG = {
 
 
 
-                         # Three General settings
+                         # Six General settings
                          ########################################################################################################
 
                          # 1. Directory path where you want to download HDF files
@@ -30,6 +30,15 @@ MEERA_ANALYZER_CFG = {
 
                          # 3. NASA FTP server uses email as password for login (even dummy email will work)
                          USER_EMAIL_ADDR               :  'demo@tum.de',
+
+                         # 4. Tool DB Name
+                         MERRA_DB_NAME                 : 'merra',
+
+                         # 5. Tool DB user name
+                         MERRA_DB_USER_NAME            : 'mantosh',
+
+                         # 6. Tool DB password
+                         MERRA_DB_PASSWORD             : 'password',
 
                          ########################################################################################################
 

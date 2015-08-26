@@ -14,4 +14,8 @@ USER_EMAIL_ADDR                    =     107
 YOUR_DOWNLOADED_HDFFILE_DIR_PATH   =     108
 MAX_ATTEMPTS_TO_DOWNLOAD           =     109
 RETRY_TIMEOUT                      =     110
+MERRA_DB_NAME                      =     111
+MERRA_DB_USER_NAME                 =     112
+MERRA_DB_PASSWORD                  =     113
+
 
