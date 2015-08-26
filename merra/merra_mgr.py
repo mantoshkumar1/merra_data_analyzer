@@ -255,7 +255,7 @@ class merra_tool:
          
             for local_file in files_path_list:
 
-                # Check whether you have permission to access this file or not and it exist or not, if yes then populate the DB
+                # Check whether you have permission to access this file or not and it exist or not, if yes then populate the DB (Never trust user)
                 if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
                     self.process_hdf_file(local_file)
 
@@ -423,6 +423,8 @@ class merra_tool:
     
         num_attempts = self.max_attempts
 
+        self.make_sure_path_exists(self.download_path)
+
         with open(os.path.join(self.download_path, file_name), 'w') as f:
             self.ptr = f.tell()
 
@@ -534,6 +536,29 @@ class merra_tool:
         try: 
             self.conn.close()
             sys.exit(0)
+        except:
+            pass
+
+
+
+    def make_sure_path_exists(self, path):
+        """ 
+        Function name : make_sure_path_exists
+
+        Description   : Create the directory, but if it already exists we ignore the error. 
+
+        Parameters    : dir_path [String, Relative/Absolute Path of a directory) ]
+        
+        Return        : 
+
+        """
+
+        try:
+            os.makedirs(path)
+
+        except OSError as exception:
+            pass
+
         except:
             pass
 
