@@ -15,7 +15,7 @@ MEERA_ANALYZER_CFG = {
                          #
                          # Note: If you enable this setting then all below other settings related with FTP server will \
                          #       automatically become idle.
-                         YOUR_DOWNLOADED_HDFFILE_DIR_PATH   :   None, # '../mantosh_system/my_hdf_data',
+                         YOUR_DOWNLOADED_HDFFILE_DIR_PATH   :   None, # '../mantosh_system/my_downloaded_hdf_collection',
 
 
 
