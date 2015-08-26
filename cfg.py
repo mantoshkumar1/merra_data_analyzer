@@ -63,12 +63,14 @@ MEERA_ANALYZER_CFG = {
                          # 1. FTP host address
                          FTP_HOST_ADDR        :  'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
 
-                         # 2. Use this setting to observe interacton of this tool with ftp server
+                         # 2. Home directory over ftp server
+                         # If you are uncertain which should be your parent dir over ftp server, set it to ["/"]
+                         # Or, you can select multiple parent dir over ftp server in which you want to search. Ex:["pic", "dat"]
+                         FTP_HOME_DIR         :  ["data"],
+
+                         # 3. Use this setting to observe interacton of this tool with ftp server
                          #    0 = none, 1 = some output, 2 = max debugging output
                          FTP_DEBUG_LEVEL      :  0,
-
-                         # 3. Home directory over ftp server
-                         FTP_HOME_DIR         :  ["data"],
 
                          # 4. Type of downloading/processing file
                          PROCESSING_FILE_TYPE :  '.hdf',
