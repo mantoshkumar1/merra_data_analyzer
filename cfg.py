@@ -8,13 +8,13 @@ from merra.merra_constants import *
 
 MEERA_ANALYZER_CFG = {  
                          # Use below setting only&only if you want to use already downloaded HDF files. \ 
-                         # Otherside always set it to None (No connection with internet is needed for this case).
+                         # Otherside always set it to None (No connection with internet is needed in this case).
                          #
                          # If you want to enable this setting, Enter the parent directory path of the downloaded files, \
                          #    - it will find all the hdf files stored inside this directory & its subdirectories.
                          #
-                         # Note: If you enable this setting then all below other settings will automatically become idle - \
-                         #       - except PROCESSING_FILE_TYPE.
+                         # Note: If you enable this setting then all below other settings related with FTP server will \
+                         #       automatically become idle.
                          YOUR_DOWNLOADED_HDFFILE_DIR_PATH   :   None, # '../mantosh_system/my_hdf_data',
 
 
@@ -57,7 +57,7 @@ MEERA_ANALYZER_CFG = {
 
 
 
-                         # Four technically advanced settings ( Caution: Are you sure to change it? )
+                         # Four technically advanced settings ( Caution: Are you sure you want to change these? )
                          ########################################################################################################
                          
                          # 1. FTP host address
