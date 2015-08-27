@@ -8,7 +8,7 @@ This README document contains all the informations that are necessary to get thi
 ---------------------------------------------------------------------------------------------------
 $ cd merra_analyzer
 $ export PYTHONPATH=$PWD
-$ python scripts/test_download.py
+$ python scripts/hdf_script.py
 
 $ psql
 $ create database merra; (Set this DB_NAME in cfg.py)
