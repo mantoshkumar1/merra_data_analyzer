@@ -313,7 +313,7 @@ class merra_tool:
                     self.process_hdf_file(dwnlded_hdf_full_path, hdf_file)
  
                     # Once DB is populated, you can delete the downloaded file
-                    if cfg[SAVE_DOWNLOADED_DATA] is False:
+                    if cfg[SAVE_DOWNLOADING_DATA] is False:
                         self.delete_file(hdf_file)
                         print 'file {} is deleted as per user instruction.'.format(hdf_file)
 
