@@ -66,7 +66,7 @@ class merra_tool:
 
     def __init__(self):
 
-        if cfg[YOUR_DOWNLOADED_HDFFILE_DIR_PATH] is not None:
+        if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
             return
         
         if cfg.has_key(FTP_HOST_ADDR) and cfg.get(FTP_HOST_ADDR) is not None:
@@ -191,7 +191,7 @@ class merra_tool:
         Return        :
         """
 
-        if cfg[YOUR_DOWNLOADED_HDFFILE_DIR_PATH] is not None:
+        if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
             print "Wir danken fur . Auf Wiedersehen!"
             print "Thank you for using this application!"
             return
@@ -249,9 +249,9 @@ class merra_tool:
         Return        :
         """
 
-        if cfg[YOUR_DOWNLOADED_HDFFILE_DIR_PATH] is not None:
+        if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
 
-            files_path_list = self.find_files_in_dir(cfg[YOUR_DOWNLOADED_HDFFILE_DIR_PATH])
+            files_path_list = self.find_files_in_dir(cfg[YOUR_LOCAL_HDFFILE_DIR_PATH])
          
             for local_file in files_path_list:
 
@@ -581,7 +581,7 @@ class merra_tool:
         if(False == os.path.isdir(dir_path)):
             print "\n********************************************************************"
             print "Directory " + dir_path + " doesn't exist\n"
-            print "Set correct path in  YOUR_DOWNLOADED_HDFFILE_DIR_PATH in cfg.py"
+            print "Set correct path in  YOUR_LOCAL_HDFFILE_DIR_PATH in cfg.py"
             print "********************************************************************\n"
             return files_path_list
 
