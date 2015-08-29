@@ -33,13 +33,13 @@ MEERA_ANALYZER_CFG = {
                          USER_EMAIL_ADDR               :  'demo@tum.de',
 
                          # 4. Tool DB Name
-                         MERRA_DB_NAME                 : 'merra',
+                         MERRA_DB_NAME                 :  'merra',
 
                          # 5. Tool DB user name
-                         MERRA_DB_LOGIN                : 'mantosh',
+                         MERRA_DB_LOGIN                :  'mantosh',
 
                          # 6. Tool DB password
-                         MERRA_DB_PASSWORD             : 'password',
+                         MERRA_DB_PASSWORD             :  'password',
 
                          ########################################################################################################
 
@@ -66,7 +66,7 @@ MEERA_ANALYZER_CFG = {
 
                          # 2. Home directory over ftp server
                          # If you are uncertain which should be your parent dir over ftp server, set it to ["/"]
-                         # Or, you can select multiple parent dir over ftp server in which you want to search. Ex:["pic", "dat"]
+                         # Or, you can select multiple parent dir over ftp server in which you want to search. Ex:["/x/y", "dat"]
                          FTP_HOME_DIR         :  ["data"],
 
                          # 3. Use this setting to observe interacton of this tool with ftp server
