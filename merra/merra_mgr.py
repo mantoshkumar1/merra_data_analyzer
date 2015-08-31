@@ -552,9 +552,10 @@ class merra_tool:
 
         try: 
             self.conn.close()
-            sys.exit(0)
         except:
             pass
+        
+        raise SystemExit()
 
 
 
