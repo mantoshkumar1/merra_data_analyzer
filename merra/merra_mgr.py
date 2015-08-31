@@ -285,8 +285,19 @@ class merra_tool:
         """
 
         new_dirs = []
-        self.directory = self.conn.pwd()
-        
+
+        try:
+            self.directory = self.conn.pwd()
+
+        except AttributeError as err:
+            print("Error: {}".format(str(err)))
+            self.shutdown()
+
+        except:
+            print "Some error occured"
+            self.shutdown()
+       
+ 
         if self.isdir(dir_name):
             print("Changing directory from " + self.directory + " to " + dir_name)
             self.move_to_dir(dir_name)
@@ -534,10 +545,10 @@ class merra_tool:
 
         """
 
-        print "***************************************************"           
+        print "\n***************************************************"           
         print "Internet / FTP server down"
         print "Program Terminating"
-        print "***************************************************"          
+        print "***************************************************\n"          
 
         try: 
             self.conn.close()
