@@ -238,11 +238,11 @@ class merra_tool:
             print 'Some error occured'
  
     
-    def download_hdf_data(self):
+    def download_process_hdf_data(self):
         """
-        Function name : crwal_server
+        Function name : download_process_hdf_data
 
-        Description   : Driver function to crwal the server and download
+        Description   : Driver function to crwal the server/local directory and/or invokes processing of hdf data
 
         Parameters    : 
 
@@ -255,9 +255,15 @@ class merra_tool:
          
             for local_file in files_path_list:
 
-                # Check whether you have permission to access this file or not and it exist or not, if yes then populate the DB (Never trust user)
+                # Check whether you have permission to access this file or not and it exist or not, 
+                #    - if yes then populate the DB (Never trust user, always check)
                 if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
                     self.process_hdf_file(local_file)
+
+                else:
+                    print "\n********************************************************************"
+                    print local_file + " : not existing / read access permission denied"
+                    print "********************************************************************\n"
 
             return
                 
