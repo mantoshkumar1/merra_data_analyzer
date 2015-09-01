@@ -6,7 +6,6 @@ Developr students:
    LinkedIn  : de.linkedin.com/in/mantoshk
    eMail     : mantosh.kumar@tum.de
                mantoshkumar1@gmail.com
-   Telephone : +49-176808-11514
 
 
 2. Gaurav Krishna Joshi 
@@ -22,7 +21,6 @@ Mentors
    Department of Electrical and Computer Engineering
    Technical University of Munich, 80333 Germany
    eMail     : thomas.hamacher@tum.de
-   Telephone : +49 (89) 289 - 10481
    Office    : 8102.01.413
 
 2. Prof. Tobias Eder
