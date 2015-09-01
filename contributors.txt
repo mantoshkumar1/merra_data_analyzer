@@ -2,7 +2,8 @@ Developr students:
 ---------------------------------------------------------------------------
 1. Mantosh Kumar
    Master student of Informatics
-   Technical University of Munich, Germany
+   Technical University of Munich, 80333 Germany
+   LinkedIn  : de.linkedin.com/in/mantoshk
    eMail     : mantosh.kumar@tum.de
                mantoshkumar1@gmail.com
    Telephone : +49-176808-11514
@@ -10,29 +11,30 @@ Developr students:
 
 2. Gaurav Krishna Joshi 
    Master student of Informatics
-   Technical University of Munich, Germany
+   Technical University of Munich, 80333 Germany
    eMail : er.gauravjoshi2011@gmail.com
 
 
 Mentors
 ---------------------------------------------------------------------------
 1. Prof. Dr. Thomas Hamacher
-   Department of Renewable and Sustainable Energy Systems
+   Institute for Renewable and Sustainable Energy Systems
    Department of Electrical and Computer Engineering
+   Technical University of Munich, 80333 Germany
    eMail     : thomas.hamacher@tum.de
    Telephone : +49 (89) 289 - 10481
    Office    : 8102.01.413
 
-2. Tobias Eder
-   Department of Renewable and Sustainable Energy Systems
-   Technical University of Munich, Germany
+2. Prof. Tobias Eder
+   Institute for Renewable and Sustainable Energy Systems
+   Technical University of Munich, 80333 Germany
    eMail  : t.eder@tum.de
    Office : 8102.01.414
 
 3. Magdalena Dorfner
-   Researcher
-   Department of Renewable and Sustainable Energy Systems
-   Technical University of Munich, Germany
+   Research and Teaching Associate
+   Institute for Renewable and Sustainable Energy Systems
+   Technical University of Munich, 80333 Germany
    eMail  : m.dorfner@tum.de
    office : 8102.01.414
 
