@@ -19,8 +19,11 @@ class Merra_Product:
     ## Creating an Dictionary MerraProductsInfo that contains all Merra Products Info Like
     ## Info about all attributes in an merra file
     ## Dimension of the attribute whether 2D or 3D
-    def ExtractingMerraProductsInfo(self,TextFilename):
-        self.file = open(TextFilename,'r')
+    def ExtractingMerraProductsInfo(self):
+
+        TextFileName = os.getcwd() + "/merra_db_operation/MerraProductsInfo.txt"
+        self.file = open(TextFileName, 'r')
+
         self.lines = self.file.readlines() # will append in the list out
         for line in self.lines:
             if not line.startswith("//") and not line.startswith("  "):

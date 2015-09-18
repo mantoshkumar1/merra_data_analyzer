@@ -11,6 +11,8 @@ import socket
 import logging
 import time
 import threading
+from datetime import datetime
+from merra_db_operation.DBConfigFile import *
 
 
 # importing merra tool modules
@@ -64,8 +66,12 @@ def setInterval(interval, times = -1):
 
 class merra_tool:
 
-    def __init__(self):
+    def __init__(self, DB, Merra, Extract):
 
+        self.DB      =  DB
+        self.Merra   =  Merra
+        self.Extract =  Extract
+      
         if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
             return
         
@@ -191,6 +197,10 @@ class merra_tool:
         Return        :
         """
 
+        # closing db connection
+        self.DB.DatabaseClosed()
+
+
         if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
             print "Wir danken fur . Auf Wiedersehen!"
             print "Thank you for using this application!"
@@ -258,7 +268,8 @@ class merra_tool:
                 # Check whether you have permission to access this file or not and it exist or not, 
                 #    - if yes then populate the DB (Never trust user, always check)
                 if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
-                    self.process_hdf_file(local_file)
+                    base_name, f_name = os.path.split(local_file)
+                    self.process_hdf_file(local_file, f_name)
 
                 else:
                     print "\n********************************************************************"
@@ -317,7 +328,7 @@ class merra_tool:
  
             # download hdf files stored in self.hdffile_list
             for hdf_file in self.hdffile_list:
-                if(self.file_exist_in_db(hdf_file)):
+                if(self.DB.file_exist_in_db(hdf_file)):
                     print "\n" + hdf_file + " data is already available in MERRA DB"
                     continue
                     
@@ -619,19 +630,14 @@ class merra_tool:
 
 
 
-    def process_hdf_file(self, full_path, file_name = None):
+    def process_hdf_file(self, full_path, file_name):
         """ 
         Function name : process_hdf_file
 
         Description   : This is a bridge function between web crawl and DB functions. 
                         This function sends file to DB function for extraction and processing and populating Merra DB.
 
-                        Scenario 1: If user has specified an locally downloaded HDF file, then this function \
-                        doesn't need file_name (= None) and obviously this file_name (= None) will not be updated \
-                        in downloaded_hdf_files_db
-         
-                        Scenario 2: If this tool is crawling all over ftp server, then this function needs full_path \
-                        and name of the downloaded hdf file
+                        This function needs full_path and name of the downloaded hdf file.
 
 
         Parameters    : full_path: (String, Relative/Absolute full path of the hdf file)
@@ -641,10 +647,76 @@ class merra_tool:
 
         """
 
-        pass
+	hdffile = full_path 
+	hdffilename = file_name
 
 
-    def file_exist_in_db(self, file_name):
+        MerraProductName = self.Merra.ExtractMerraProductName(hdffilename)
+        print " MerraProductName ", MerraProductName
+
+
+        Attribute_list=len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
+    
+        for counter in range(0,Attribute_list):
+        
+            AttributeName = self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'][counter]
+            Dim = self.Merra.MerraProductsInfo[MerraProductName]['DIMList'][counter]
+            print " AttributeName  : ",AttributeName
+            print " Dim    : ",Dim
+
+            self.Extract.ConfigureMerraFiledetails(hdffile,AttributeName)
+            self.Extract.HDFFileHandler()
+            self.Extract.ExtractDataDimesions()
+        
+            ### For Loop o handle time 
+            timeInterval = 1
+            self.Extract.ExtractData(timeInterval)
+  
+ 
+            ## Connection Setup 
+            tablename = DatabaseTablesName[MerraProductName]
+            tablename = tablename+"_"+AttributeName
+            ## Table name should be in LowerCase only
+            tablename = tablename.lower()
+        
+            flag = self.DB.check_If_Table_Exist(tablename)
+        
+            ## If table does not exist than create it else append Data in existing Table
+            if(flag == False):
+                # Table Created
+                self.DB.CreateSpatialTable(tablename,AttributeName)       
+         
+            time = datetime.now()
+    
+            counter = 0
+            for ht in range(0,self.Extract.height_len):
+                # need improvement
+                if(counter > 1000):
+                    break
+                for lat in range(0,self.Extract.latitude_len):
+                    if(counter > 1000):
+                        break
+                    for lon in range(0,self.Extract.longitude_len):
+                         value     = self.Extract.data[ht][lat][lon]
+                         Height    = self.Extract.height_list[ht]
+                         Lattitude = self.Extract.latitude_list[ht]
+                         Longitude = self.Extract.longitude_list[ht]
+                         unit      = str(self.Extract.unit)
+
+                         # Value Added
+                         self.DB.AddSpatialData(tablename,time,Lattitude,Longitude,Height,value)
+                         counter = counter + 1
+                         print " counter : ",counter
+                    
+                    
+            print" Total Number of Elements Inserted : ",counter
+
+        # adding downloaded hdf file name in DB 
+        self.DB.AddfilesnameinTable(hdffilename)   
+    
+
+
+#    def file_exist_in_db(self, file_name):
         """ 
         Function name : file_exist_in_db
 
@@ -656,7 +728,7 @@ class merra_tool:
                         else return False
         """
 
-        return False
+ #       return False
 
 
     def reset_merra_db(self):

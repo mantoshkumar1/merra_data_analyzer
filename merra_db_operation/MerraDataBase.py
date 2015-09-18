@@ -66,6 +66,17 @@ class MerraDatabase:
     #### Check If file exist in Table or Not    
     
     def file_exist_in_db(self,filename):
+        """ 
+        Function name : file_exist_in_db
+
+        Description   : Check whether this file(file_name) has already been used to populate the DB or not
+
+        Parameters    : file_name (String, name of file)
+         
+        Return        : If file_name has already been used to populate DB, returns True
+                        else return False
+        """
+
         self.cur.execute("select FileName from "+self.tableforfilesadded+" where FileName='"+filename+"';")
         self.conn.commit()
         result=self.cur.fetchone()
