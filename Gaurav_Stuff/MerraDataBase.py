@@ -14,7 +14,6 @@
 import psycopg2
 
 class MerraDatabase:
-    
     ### Initialize Database Configuration
     def __init__(self,DataBaseName,Username,Password,hostIP,port):
         self.DataBaseName=DataBaseName
@@ -22,6 +21,7 @@ class MerraDatabase:
         self.Password=Password
         self.hostIP=hostIP
         self.port=port
+        self.tableforfilesadded=None
         print "MerraDatabase INIT"
     
     ### Open database connection
@@ -32,10 +32,48 @@ class MerraDatabase:
 
     ### Create Table
     def CreateTable(self,Tablename):    
-
         self.cur.execute("CREATE TABLE "+str(Tablename)+"( NAME  TEXT,AGE   INT );")
         print "Table created successfully"
         self.conn.commit()
+
+
+    ### Create Table
+    def check_If_Table_Exist(self,Tablename):    
+        self.cur.execute("SELECT relname FROM pg_class WHERE relname ='"+Tablename+"';")
+        self.conn.commit()
+        result=self.cur.fetchone()
+        print result
+        if result ==None:
+            return False
+        else:
+            return True
+        
+        
+
+    ### Create Table
+    def CreateTableforFiles(self,Tablename):    
+        self.cur.execute("CREATE TABLE "+str(Tablename)+"( FileName  TEXT);")
+        print Tablename+" Table created successfully"
+        self.conn.commit()
+        self.tableforfilesadded=Tablename;
+        
+    #### Add Filename  in Table    
+    def AddfilesnameinTable(self,filename):
+        self.cur.execute("INSERT INTO "+self.tableforfilesadded+"(FileName) VALUES('"+str(filename)+"');")
+        print filename+" Added successfully"      
+        self.conn.commit()
+        
+    #### Check If file exist in Table or Not    
+    
+    def file_exist_in_db(self,filename):
+        self.cur.execute("select FileName from "+self.tableforfilesadded+" where FileName='"+filename+"';")
+        self.conn.commit()
+        result=self.cur.fetchone()
+        print result
+        if result ==None:
+            return False
+        else:
+            return True
         
       
     ### Create POSTGIS extension
@@ -47,13 +85,13 @@ class MerraDatabase:
           
     ### Create Spatial Table
     def CreateSpatialTable(self,Tablename,AttributeName):  
-        print "Tablename",Tablename  
+        print " Tablename  : ",Tablename  
         self.cur.execute("CREATE TABLE "+str(Tablename)+"( time TIMESTAMP,geom GEOMETRY (PointZ, 4326),"+str(AttributeName)+" NUMERIC);")
         print "Spatial Table created successfully"
         self.conn.commit()    
     
-    def AddColumnInTable(self,Tablename,Colname):    
-        self.cur.execute("CREATE TABLE "+str(Tablename)+"( time TIMESTAMP,geom GEOMETRY (PointZ, 4326),Pressure NUMERIC);")
+    def AddColumnInTable(self,Tablename,Colname,Datatype):    
+        self.cur.execute("ALTER TABLE "+str(Tablename)+" ADD COLUMN "+Colname+" "+Datatype+";")
         print "Spatial Table created successfully"
         self.conn.commit()    
     
@@ -71,7 +109,7 @@ class MerraDatabase:
         self.conn.commit()
     
     #### Add Spatial Data in Table    
-    def AddSpatialData(self,tablename,time,lat,lon,alt,value,unit):
+    def AddSpatialData(self,tablename,time,lat,lon,alt,value):
         #self.cur.execute("INSERT INTO "+str(tablename)+" VALUES("+str(time)+",ST_GeomFromText('POINT("+str(lat)+" "+str(lon)+" "+str(alt)+")',4326),"+str(value)+","+str(unit)+");")
         print "tablename",tablename
         self.cur.execute("INSERT INTO "+str(tablename)+" VALUES('2004-10-19 10:23:54',ST_GeomFromText('POINT("+str(lat)+" "+str(lon)+" "+str(alt)+")',4326),"+str(value)+");")
@@ -87,12 +125,28 @@ if __name__ == "__main__":
     hostIP="127.0.0.1"
     DB=MerraDatabase('merra','postgres','gnusmas',hostIP,"5432")
     DB.DatabaseConnection()
-    #DB.CreateTable("Test1")
-    DB.DropTable("Testspatial2")
-    DB.CreateSpatialTable("Testspatial2")
-    DB.AddSpatialData("Testspatial2",175,11,11,25.0)
-    DB.AddSpatialData("Testspatial2",175,11,11,15.0)
     
+    tablename="t8"
+    DB.CreateTableforFiles(tablename)
+    DB.AddColumnInTable(tablename,"XYZ","NUMERIC")
+    DB.AddfilesnameinTable('abc1')
+    DB.AddfilesnameinTable('abc2')
+    DB.AddfilesnameinTable('abc3')
+    DB.AddfilesnameinTable('abc4')
+    DB.AddfilesnameinTable('abc5')
+    DB.AddfilesnameinTable('abc6')
+    DB.AddfilesnameinTable('abc7')
+    DB.AddfilesnameinTable('abc8')
+    
+    flag=DB.file_exist_in_db('abc5')
+    print "  abc5   :  "+str(flag)
+
+    flag=DB.file_exist_in_db('ab')
+    print "  ab    :  "+str(flag)
+    
+    flag=DB.file_exist_in_db('abc7')
+    print "  abc7   :  "+str(flag)
+       
     DB.DatabaseClosed()
     
     

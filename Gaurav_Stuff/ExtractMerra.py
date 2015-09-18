@@ -1,8 +1,8 @@
 import os
 
-#import matplotlib as mpl
-#import matplotlib.pyplot as plt
-#from mpl_toolkits.basemap import Basemap
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
 import numpy as np
 from pyhdf.SD import SD, SDC
     
@@ -63,6 +63,7 @@ class ExtractMerraFile:
         print " Height Len (Datam)",len(self.data) 
         print " YDIM   Len (Datam[0]",len(self.data[0]) 
         print " XDIM   Len (Datam[0][0])",len(self.data[0][0]) 
+        print self.data[0][0][0]
  
         # Retrieve the attributes.
         attrs = self.data4D.attributes(full=1)
@@ -80,8 +81,8 @@ class ExtractMerraFile:
         #print " units    : ",units       
 
         # Replace the missing values with NaN.        
-        self.data[self.data == missing_value] = np.nan
-        self.datam = np.ma.masked_array(self.data, np.isnan(self.data))
+        #self.data[self.data == missing_value] = np.nan
+        #self.datam = np.ma.masked_array(self.data, np.isnan(self.data))
         
 if __name__ == "__main__":
 
