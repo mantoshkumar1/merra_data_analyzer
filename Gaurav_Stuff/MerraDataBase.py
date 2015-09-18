@@ -121,32 +121,6 @@ class MerraDatabase:
     def DatabaseClosed(self):  
         self.conn.close()  
 
-if __name__ == "__main__":
-    hostIP="127.0.0.1"
-    DB=MerraDatabase('merra','postgres','gnusmas',hostIP,"5432")
-    DB.DatabaseConnection()
-    
-    tablename="t8"
-    DB.CreateTableforFiles(tablename)
-    DB.AddColumnInTable(tablename,"XYZ","NUMERIC")
-    DB.AddfilesnameinTable('abc1')
-    DB.AddfilesnameinTable('abc2')
-    DB.AddfilesnameinTable('abc3')
-    DB.AddfilesnameinTable('abc4')
-    DB.AddfilesnameinTable('abc5')
-    DB.AddfilesnameinTable('abc6')
-    DB.AddfilesnameinTable('abc7')
-    DB.AddfilesnameinTable('abc8')
-    
-    flag=DB.file_exist_in_db('abc5')
-    print "  abc5   :  "+str(flag)
 
-    flag=DB.file_exist_in_db('ab')
-    print "  ab    :  "+str(flag)
-    
-    flag=DB.file_exist_in_db('abc7')
-    print "  abc7   :  "+str(flag)
-       
-    DB.DatabaseClosed()
     
     

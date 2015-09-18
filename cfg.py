@@ -41,6 +41,10 @@ MEERA_ANALYZER_CFG = {
                          # 6. Tool DB password
                          MERRA_DB_PASSWORD             :  'password',
 
+                         MERRA_DB_HOST_IP              :  '127.0.0.1',
+
+                         MERRA_DB_PORT                 :  '5432',
+
                          ########################################################################################################
 
 

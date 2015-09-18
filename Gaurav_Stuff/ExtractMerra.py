@@ -84,46 +84,6 @@ class ExtractMerraFile:
         #self.data[self.data == missing_value] = np.nan
         #self.datam = np.ma.masked_array(self.data, np.isnan(self.data))
         
-if __name__ == "__main__":
 
-    hdffile='MERRA300.prod.assim.inst3_3d_chm_Ne.20021201.hdf'
-    try:
-        hdffile = os.path.join(os.environ['HDFEOS_ZOO_DIR'], hdffile)
-    except KeyError:
-        pass
-
-    Extract=ExtractMerraFile()
-    
-    variablename='PLE'
-    Extract.ConfigureMerraFiledetails(hdffile,variablename)
-    Extract.HDFFileHandler()
-    Extract.ExtractDataDimesions()
-    Extract.ExtractData(0)
-
-
-    # If a certain environment variable is set, look there for the input
-    # file, otherwise look in the current directory.
-    #hdffile = 'MERRA300.prod.assim.tavg3_3d_chm_Ne.20150401.hdf'
-    #try:
-    #    hdffile = os.path.join(os.environ['HDFEOS_ZOO_DIR'], hdffile)
-    #except KeyError:
-    #    pass
-    #
-
-    #Extract=ExtractMerraFile()
-    
-  
-    #variablename='MFZ'
-    #Extract.ConfigureMerraFiledetails(hdffile,variablename)
-    #Extract.run()
-    
-    #variablename='CMFMC'
-    #Extract.ConfigureMerraFiledetails(hdffile,variablename)
-    #Extract.run()
-        
-    
-    #variablename='KH'
-    #Extract.ConfigureMerraFiledetails(hdffile,variablename)
-    #Extract.run()
     
     
