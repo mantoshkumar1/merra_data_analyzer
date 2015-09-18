@@ -1,9 +1,6 @@
-import ExtractMerra
-import MerraDataBase
 import os
 from Canvas import Line
 from datetime import datetime
-import ConfigFile
 
 
 ### Merra class is the Master Class that manages all the SUB classes objects to do various Task :
@@ -12,7 +9,7 @@ import ConfigFile
 ##   -  Managing MERRA database(MerraDatabase class)
 
 
-class Merra:
+class Merra_Product:
     
     ### Initialize Merra Class
     def __init__(self):

@@ -3,29 +3,29 @@
 
 #### All Python Files Import
 from merra.merra_mgr import *
-import ExtractMerra
-import merra_product
-import MerraDataBase
+from merra_db_operation.ExtractMerra import *
+from merra_db_operation.merra_product import *
+from merra_db_operation.MerraDataBase import *
+from merra_db_operation.DBConfigFile import *
 
 import os
 from Canvas import Line
 from datetime import datetime
-import ConfigFile
 
 
 
-##### MERRA PRODUCTS Info 
-Merra=merra_product.Merra()
-FileName="MerraProductsInfo.txt"
+##### MERRA PRODUCTS Info handler 
+Merra=Merra_Product()
+FileName="./../merra_db_operation/MerraProductsInfo.txt"
 Merra.ExtractingMerraProductsInfo(FileName)
 
-##### MERRA Data Extraction
-Extract=ExtractMerra.ExtractMerraFile() 
+##### MERRA Data Extraction handler
+Extract=ExtractMerraFile() 
 
 ####DataBase Initialize
-DB=MerraDataBase.MerraDatabase(ConfigFile.DatabaseConfig['DataBaseName'],ConfigFile.DatabaseConfig['Username'],ConfigFile.DatabaseConfig['Password'],ConfigFile.DatabaseConfig['hostIP'],ConfigFile.DatabaseConfig['port'])
+DB=MerraDatabase(DatabaseConfig['DataBaseName'],DatabaseConfig['Username'],DatabaseConfig['Password'],DatabaseConfig['hostIP'],DatabaseConfig['port'])
 DB.DatabaseConnection()
-tablename=ConfigFile.DatabaseTablesName['FilesAdded']
+tablename=DatabaseTablesName['FilesAdded']
 ## Table name should be in LowerCase only
 tablename=tablename.lower()
 flag=DB.check_If_Table_Exist(tablename)
@@ -69,7 +69,7 @@ if(flag==False):
   
  
         ## Connection Setup 
-        tablename=ConfigFile.DatabaseTablesName[MerraProductName]
+        tablename=DatabaseTablesName[MerraProductName]
         tablename=tablename+"_"+AttributeName
         ## Table name should be in LowerCase only
         tablename=tablename.lower()
