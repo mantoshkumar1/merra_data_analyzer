@@ -77,7 +77,7 @@ class MerraDatabase:
                         else return False
         """
 
-        self.cur.execute("select FileName from "+self.tableforfilesadded+" where FileName='"+filename+"';")
+        self.cur.execute("select FileName from " + self.tableforfilesadded + " where FileName='" + filename + "';")
         self.conn.commit()
         result=self.cur.fetchone()
         print result

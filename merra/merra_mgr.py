@@ -269,6 +269,10 @@ class merra_tool:
                 #    - if yes then populate the DB (Never trust user, always check)
                 if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
                     base_name, f_name = os.path.split(local_file)
+
+                    if(self.DB.file_exist_in_db(f_name)):
+                        continue
+
                     self.process_hdf_file(local_file, f_name)
 
                 else:

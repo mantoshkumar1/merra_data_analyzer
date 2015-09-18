@@ -21,7 +21,6 @@ Extract = ExtractMerraFile()
 
 #### DataBase Initialization
 DB = MerraDatabase(cfg[MERRA_DB_NAME], cfg[MERRA_DB_LOGIN], cfg[MERRA_DB_PASSWORD], cfg[MERRA_DB_HOST_IP], cfg[MERRA_DB_PORT])
-
 DB.DatabaseConnection()
 tablename = DatabaseTablesName['FilesAdded']
 ## Table name should be in LowerCase only
@@ -36,8 +35,6 @@ if(flag == False):
 mt = merra_tool(DB, Merra, Extract)
 
 mt.download_process_hdf_data()
-
-
 
 mt.disconnect()
 
