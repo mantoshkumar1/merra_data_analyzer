@@ -26,9 +26,7 @@ tablename = DatabaseTablesName['FilesAdded']
 ## Table name should be in LowerCase only
 tablename = tablename.lower()
 flag = DB.check_If_Table_Exist(tablename)
-### Handling needed to be check
-if(flag == False):
-    DB.CreateTableforFiles(tablename)
+DB.CreateTableforFiles(tablename)
 
 
 #### MERRA FTP HANDLER
