@@ -6,22 +6,22 @@ from merra.merra_mgr import *
 from merra_db_operation.ExtractMerra import *
 from merra_db_operation.merra_product import *
 from merra_db_operation.MerraDataBase import *
-from merra_db_operation.DBConfigFile import *
-
+import cfg
 import os
-from Canvas import Line
 
+cfg = cfg.MEERA_ANALYZER_CFG
 
 ##### MERRA PRODUCTS Info handler 
-Merra=Merra_Product()
+Merra = Merra_Product()
 Merra.ExtractingMerraProductsInfo()
 
 
 ##### MERRA Data Extraction handler
 Extract = ExtractMerraFile() 
 
-####DataBase Initialize
-DB = MerraDatabase(DatabaseConfig['DataBaseName'],DatabaseConfig['Username'],DatabaseConfig['Password'],DatabaseConfig['hostIP'],DatabaseConfig['port'])
+#### DataBase Initialization
+DB = MerraDatabase(cfg[MERRA_DB_NAME], cfg[MERRA_DB_LOGIN], cfg[MERRA_DB_PASSWORD], cfg[MERRA_DB_HOST_IP], cfg[MERRA_DB_PORT])
+
 DB.DatabaseConnection()
 tablename = DatabaseTablesName['FilesAdded']
 ## Table name should be in LowerCase only

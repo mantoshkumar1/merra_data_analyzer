@@ -1,14 +1,3 @@
-
-
-DatabaseConfig ={
-        'DataBaseName': 'merra',
-    	'Username': 'postgres', 
-    	'Password': 'gnusmas', 
-    	'hostIP': '127.0.0.1',
-    	'port':'5432'     	
-    	};
-    	
-    	
 DatabaseTablesName ={
    		'FilesAdded': 'filesadded_9',
    		

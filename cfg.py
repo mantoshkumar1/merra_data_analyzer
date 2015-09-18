@@ -15,8 +15,7 @@ MEERA_ANALYZER_CFG = {
                          #
                          # Note: If you enable this setting then all below other settings related with FTP server will \
                          #       automatically become idle.
-                         #YOUR_LOCAL_HDFFILE_DIR_PATH   :   None, # '../mantosh_system/my_downloaded_hdf_collection',
-                         YOUR_LOCAL_HDFFILE_DIR_PATH   :   '/home/gaurav/Git_IDP/merra_data_analyzer/Gaurav_Stuff',
+                         YOUR_LOCAL_HDFFILE_DIR_PATH   :   '/home/gaurav/Git_IDP/merra_data_analyzer/Gaurav_Stuff', # None,
 
 
 
@@ -37,10 +36,10 @@ MEERA_ANALYZER_CFG = {
                          MERRA_DB_NAME                 :  'merra',
 
                          # 5. Tool DB user name
-                         MERRA_DB_LOGIN                :  'mantosh',
+                         MERRA_DB_LOGIN                :  'postgres',
 
                          # 6. Tool DB password
-                         MERRA_DB_PASSWORD             :  'password',
+                         MERRA_DB_PASSWORD             :  'gnusmas',
 
                          MERRA_DB_HOST_IP              :  '127.0.0.1',
 
