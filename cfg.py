@@ -64,7 +64,7 @@ MEERA_ANALYZER_CFG = {
 
 
 
-                         # Four technically advanced settings ( Caution: Are you sure you want to change these? )
+                         # Five technically advanced settings ( Caution: Are you sure you want to change these? )
                          ########################################################################################################
                          
                          # 1. FTP host address
@@ -81,6 +81,9 @@ MEERA_ANALYZER_CFG = {
 
                          # 4. Type of downloading/processing file
                          PROCESSING_FILE_TYPE :  '.hdf',
+
+                         # 5. Delete all data saved in merra db, all tables will be droped
+                         RESET_MERRA_DB       :   False,
 
                          ########################################################################################################
                       

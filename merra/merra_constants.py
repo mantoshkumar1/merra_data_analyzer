@@ -19,5 +19,6 @@ MERRA_DB_LOGIN                     =     112
 MERRA_DB_PASSWORD                  =     113
 MERRA_DB_HOST_IP                   =     114
 MERRA_DB_PORT                      =     115
+RESET_MERRA_DB                     =     116
 
 

@@ -720,32 +720,4 @@ class merra_tool:
     
 
 
-#    def file_exist_in_db(self, file_name):
-        """ 
-        Function name : file_exist_in_db
-
-        Description   : Check whether this file(file_name) has already been used to populate the DB or not
-
-        Parameters    : file_name (String, name of file)
-         
-        Return        : If file_name has already been used to populate DB, returns True
-                        else return False
-        """
-
- #       return False
-
-
-    def reset_merra_db(self):
-        """ 
-        Function name : reset_merra_db
-
-        Description   : This function will wipe out every info saved in merra DB (Are you sure to make MERRA DB dumb ?)
-
-        Parameters    : 
-         
-        Return        : 
-        """
-
-        pass
-
  

@@ -9,6 +9,7 @@
 
 
 import psycopg2
+from cfg import MEERA_ANALYZER_CFG, RESET_MERRA_DB
 
 class MerraDatabase:
     ### Initialize Database Configuration
@@ -20,6 +21,10 @@ class MerraDatabase:
         self.port = port
         self.tableforfilesadded = None
         print "MerraDatabase INIT"
+
+        if MEERA_ANALYZER_CFG[RESET_MERRA_DB]:
+            self.reset_merra_db()
+
     
     ### Open database connection
     def DatabaseConnection(self):
@@ -175,10 +180,38 @@ class MerraDatabase:
     ### DataBase Connection Disconnected
     def DatabaseClosed(self):
         try: 
-            self.conn.close()  
+            self.conn.close() 
+            self.cur.close() 
 
         except psycopg2.Error as e:
             print e
+
+
+    def reset_merra_db(self):
+        """ 
+        Function name : reset_merra_db
+
+        Description   : This function will wipe out every info saved in merra DB (Are you sure to make MERRA DB dumb ?)
+
+        Parameters    : 
+         
+        Return        : 
+        """
+
+        try:
+            self.cur.execute("SELECT table_schema,table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_schema,table_name")
+
+            rows = cur.fetchall()
+            for row in rows:
+                print "dropping table: ", row[1]
+                cur.execute("drop table " + row[1] + " cascade")
+ 
+
+            self.cur.close()
+            self.conn.close()
+
+        except:
+            print "Error: ", sys.exc_info()[1]
 
     
     
