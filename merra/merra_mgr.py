@@ -12,12 +12,12 @@ import logging
 import time
 import threading
 from datetime import datetime
-from merra_db_operation.DBConfigFile import *
 
 
 # importing merra tool modules
 import cfg
 from merra.merra_constants import *
+from merra_db_operation.DBConfigFile import *
 
 cfg = cfg.MEERA_ANALYZER_CFG
 
@@ -66,11 +66,12 @@ def setInterval(interval, times = -1):
 
 class merra_tool:
 
-    def __init__(self, DB, Merra, Extract):
+    def __init__(self, DB, Merra, Extract, log):
 
         self.DB      =  DB
         self.Merra   =  Merra
         self.Extract =  Extract
+        self.log = log
       
         if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
             return
@@ -335,8 +336,19 @@ class merra_tool:
                 if(self.DB.file_exist_in_db(hdf_file)):
                     print "\n" + hdf_file + " data is already available in MERRA DB"
                     continue
+                   
+               
+                # tool is currentlty not able to handle this kind of collection of hdf data, so just exit from this ftp directory
+                if(False == self.check_tool_hdf_capa(hdf_file)):
                     
-                    
+                    print "************************************************************************************************"
+                    print "Currently MERRA tool can't handle this kind of hdf data " + hdf_file
+                    print "************************************************************************************************"
+                    self.log.write('\nHDF format not supported ' + str(hdf_file))
+                    self.dir_list = [ ] 
+                    break
+
+
                 print "\n" + "Downloading starts for : " + hdf_file
                 print "************************************************************************"
                 if(self.download_file(hdf_file)):
@@ -348,6 +360,7 @@ class merra_tool:
                     if cfg[SAVE_DOWNLOADING_DATA] is False:
                         self.delete_file(hdf_file)
                         print 'file {} is deleted as per user instruction.'.format(hdf_file)
+
 
 
             self.hdffile_list = [ ]
@@ -719,5 +732,34 @@ class merra_tool:
         self.DB.AddfilesnameinTable(hdffilename)   
     
 
+    def check_tool_hdf_capa(self, hdffilename):
+        """ 
+        Function name : check_tool_hdf_capa
+
+        Description   :  Checks whether this tool can handle this type of hdf data or not.
+                         This function needs name of the downloading file.
+
+
+        Parameters    : hdffilename (String : Name of hdf file)
+
+        Return        : if it can handle this kind of hdf data then return True else return False
+
+        """
+
+
+        capa = True
+
+        MerraProductName = self.Merra.ExtractMerraProductName(hdffilename)
+
+        try:
+            Attribute_list = len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
+
+        except:
+            capa = False
+        
+        return capa
+   
+
+ 
 
  

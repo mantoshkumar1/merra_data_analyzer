@@ -1,3 +1,7 @@
+# You can use this software for your purpose provided you include below two lines.
+# This file is part of merra_data_analyzer, a high-level ftp-protocol big size recursive file downloader and merra file analyser.
+# Copyright : Mantosh Kumar @ TUM, Germany
+
 import os
 
 
@@ -10,9 +14,10 @@ import os
 class Merra_Product:
     
     ### Initialize Merra Class
-    def __init__(self):
+    def __init__(self, log):
         print " Initialize MERRA Class "
-        self.MerraProductsInfo={}
+        self.MerraProductsInfo = {}
+        self.log = log
 
 
 

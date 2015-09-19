@@ -179,7 +179,6 @@ You are now ready to use the merra tool.
 * Other guidelines
 
 ### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+ 
+* Please see the contributors text file
 

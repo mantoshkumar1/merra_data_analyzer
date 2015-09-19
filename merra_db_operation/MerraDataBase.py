@@ -1,3 +1,6 @@
+# You can use this software for your purpose provided you include below two lines.
+# This file is part of merra_data_analyzer, a high-level ftp-protocol big size recursive file downloader and merra file analyser.
+# Copyright : Mantosh Kumar @ TUM, Germany
 
 #### Command Line Access
 ##   sudo -i -u postgres
@@ -14,13 +17,14 @@ from cfg import MEERA_ANALYZER_CFG, RESET_MERRA_DB
 
 class MerraDatabase:
     ### Initialize Database Configuration
-    def __init__(self,DataBaseName,Username,Password,hostIP,port):
+    def __init__(self,DataBaseName,Username,Password,hostIP,port, log):
         self.DataBaseName = DataBaseName
         self.Username  = Username
         self.Password = Password
         self.hostIP = hostIP
         self.port = port
         self.tableforfilesadded = None
+        self.log = log
         print "MerraDatabase INIT"
 
 

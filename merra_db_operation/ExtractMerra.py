@@ -1,3 +1,7 @@
+# You can use this software for your purpose provided you include below two lines.
+# This file is part of merra_data_analyzer, a high-level ftp-protocol big size recursive file downloader and merra file analyser.
+# Copyright : Mantosh Kumar @ TUM, Germany
+
 import os
 import numpy as np
 from pyhdf.SD import SD, SDC
@@ -5,16 +9,21 @@ from pyhdf.SD import SD, SDC
 class ExtractMerraFile:
     
     ### Initialize Database Configuration
-    def __init__(self):
+    def __init__(self, log):
         print " ExtractMerraFile Init "
+        self.log = log
+        #self.log.write('\nExtractMerraFile Init')
+        
         
     def ConfigureMerraFiledetails(self,hdffile,variablename): 
         self.hdffile = hdffile
         self.variablename = variablename           
-        
+       
+ 
     def HDFFileHandler(self):    
         self.hdf = SD(self.hdffile, SDC.READ)
         print " hdf  ",self.hdf
+        #self.log.write('\nhdf  ' + str(self.hdf))
         
         
     def ExtractDataDimesions(self):
@@ -26,6 +35,9 @@ class ExtractMerraFile:
         print "longitude_list : ",self.longitude_list
         print "longitude_len : ",self.longitude_len
 
+        #self.log.write('\nlongitude_list : ' + str(self.longitude_list))
+	#self.log.write('\nlongitude_len : ' + str(self.longitude_len))
+
 
         # Ydim is Lattitude
         lat = self.hdf.select('YDim')
@@ -34,6 +46,8 @@ class ExtractMerraFile:
         print "latitude_list : ",self.latitude_list
         print "latitude_len : ",self.latitude_len
         
+        self.log.write('\nlatitude_list : ' + str(self.latitude_list))
+        self.log.write('\nlatitude_len : ' + str(self.latitude_len))
 
         ht = self.hdf.select('Height')
         self.height_list = ht[:]
@@ -41,6 +55,8 @@ class ExtractMerraFile:
         print "height_list : ",self.height_list
         print "height_len : ",self.height_len
         
+        #self.log.write('\nheight_list : ' + str(self.height_list))
+        #self.log.write('\nheight_len : ' + str(self.height_len))
 
         t = self.hdf.select('Time')
         self.time_list = t[:]
@@ -48,6 +64,8 @@ class ExtractMerraFile:
         print "time_list : ",self.time_list
         print "time_len : ",self.time_len
         
+        #self.log.write('\ntime_list : ' + str(self.time_list))
+        #self.log.write('\ntime_len : ' + str(self.time_len))
       
 
     def ExtractData(self,timeInterval):
