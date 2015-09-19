@@ -15,7 +15,7 @@ MEERA_ANALYZER_CFG = {
                          #
                          # Note: If you enable this setting then all below other settings related with FTP server will \
                          #       automatically become idle.
-                         YOUR_LOCAL_HDFFILE_DIR_PATH   :  '/home/gaurav/Git_IDP/merra_data_analyzer/Gaurav_Stuff', #None,
+                         YOUR_LOCAL_HDFFILE_DIR_PATH   : 'merra_downloaded_data',
 
 
 
@@ -27,34 +27,34 @@ MEERA_ANALYZER_CFG = {
 
                          # 2. Set to True if you want to store downloading files in above directory
                          #            False: it will be deleted once db gets populated
-                         SAVE_DOWNLOADING_DATA         :  False,
+                         SAVE_DOWNLOADING_DATA         :  True,
 
                          # 3. NASA FTP server uses email as password for login (even dummy email will work)
                          USER_EMAIL_ADDR               :  'demo@tum.de',
 
-                         # 4. FTP host address **
-                         FTP_HOST_ADDR        :  'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
+                         # 4. Use this setting to observe interacton of this tool with ftp server
+                         #    0 = none, 1 = some output, 2 = max debugging output
+                         FTP_DEBUG_LEVEL               :  0,
 
-                         # 5. Home directory over ftp server **
+                         # 5. FTP host address **
+                         FTP_HOST_ADDR                 :  'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
+
+                         # 6. Home directory over ftp server **
                          # If you are uncertain which should be your parent dir over ftp server, set it to ["/"]
                          # Or, you can select multiple parent dir over ftp server in which you want to search. Ex:["/x/y", "dat"]
-                         FTP_HOME_DIR         :  ["data"],
-
-                         # 6. Use this setting to observe interacton of this tool with ftp server
-                         #    0 = none, 1 = some output, 2 = max debugging output
-                         FTP_DEBUG_LEVEL      :  0,
+                         FTP_HOME_DIR                  :  ["data/s4pa/MERRA/MAI6NVANA.5.2.0"], #["data"],
 
                          # 7. Type of downloading/processing file **
-                         PROCESSING_FILE_TYPE :  '.hdf',
+                         PROCESSING_FILE_TYPE          :  '.hdf',
 
                          # Two network failure settings
                          ##############################
 
                          # 8. In case of network failure, number of maximum tries to reconnect with network
-                         MAX_ATTEMPTS_TO_DOWNLOAD :  11,
+                         MAX_ATTEMPTS_TO_DOWNLOAD      :  11,
 
                          # 9. If the connection dies, wait this long(seconds) before reconnecting
-                         RETRY_TIMEOUT            :  15,
+                         RETRY_TIMEOUT                 :  15,
 
                          ########################################################################################################
 
@@ -67,10 +67,10 @@ MEERA_ANALYZER_CFG = {
                          MERRA_DB_NAME                 :  'merra',
 
                          # 2. Tool DB user name
-                         MERRA_DB_LOGIN                :  'postgres', #mantosh
+                         MERRA_DB_LOGIN                :  'mantosh', #'postgres',
 
                          # 3. Tool DB password
-                         MERRA_DB_PASSWORD             :  'gnusmas', #password
+                         MERRA_DB_PASSWORD             :  'password', #'gnusmas',
  
                          # 4. Tool DB host ip **
                          MERRA_DB_HOST_IP              :  '127.0.0.1', 
@@ -79,7 +79,7 @@ MEERA_ANALYZER_CFG = {
                          MERRA_DB_PORT                 :  '5432',
 
                          # 6. Delete all data saved in merra db, all tables will be droped **
-                         RESET_MERRA_DB       :   False,               
+                         RESET_MERRA_DB                :   False,               
 
                          ########################################################################################################
                       
