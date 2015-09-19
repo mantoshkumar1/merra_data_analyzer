@@ -4,7 +4,7 @@
 
 from merra.merra_constants import *
 
-# NOTE: By default every field is assigned values, you can change a/o your need
+# NOTE: Every field is assigned default values, you can change a/o your need
 
 MEERA_ANALYZER_CFG = {  
                          # Use below setting only&only if you want to use already downloaded HDF files. \ 
@@ -50,10 +50,10 @@ MEERA_ANALYZER_CFG = {
                          # Two network failure settings
                          ##############################
 
-                         # 8. In case of network failure, number of maximum tries to reconnect with network
+                         # 8. In case of network failure, number of maximum tries to reconnect with network while downlding
                          MAX_ATTEMPTS_TO_DOWNLOAD      :  11,
 
-                         # 9. If the connection dies, wait this long(seconds) before reconnecting
+                         # 9. If the connection dies, wait this long(seconds) before reconnecting while downloading
                          RETRY_TIMEOUT                 :  15,
 
                          ########################################################################################################
