@@ -163,7 +163,7 @@ $ \q         (exit from psql prompt)
     $ sudo apt-get upgrade
 
 You are now ready to use the merra tool.
-
+You can see the logging of this tool in home directory "log" file.
 
 
 * Configuration
