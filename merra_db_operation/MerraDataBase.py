@@ -9,6 +9,7 @@
 
 
 import psycopg2
+import sys
 from cfg import MEERA_ANALYZER_CFG, RESET_MERRA_DB
 
 class MerraDatabase:
@@ -22,8 +23,6 @@ class MerraDatabase:
         self.tableforfilesadded = None
         print "MerraDatabase INIT"
 
-        if MEERA_ANALYZER_CFG[RESET_MERRA_DB]:
-            self.reset_merra_db()
 
     
     ### Open database connection
@@ -32,6 +31,10 @@ class MerraDatabase:
             self.conn = psycopg2.connect(database=self.DataBaseName, user=self.Username, password=self.Password,host=self.hostIP, port=self.port)
             print " conn ",self.conn
             self.cur = self.conn.cursor()
+        
+            # Resetting merra db
+            if MEERA_ANALYZER_CFG[RESET_MERRA_DB]:
+                self.reset_merra_db()
 
         except psycopg2.Error as e:
             print e
@@ -201,14 +204,12 @@ class MerraDatabase:
         try:
             self.cur.execute("SELECT table_schema,table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_schema,table_name")
 
-            rows = cur.fetchall()
+            rows = self.cur.fetchall()
             for row in rows:
                 print "dropping table: ", row[1]
-                cur.execute("drop table " + row[1] + " cascade")
+                self.cur.execute("drop table " + row[1] + " cascade")
+                self.conn.commit()
  
-
-            self.cur.close()
-            self.conn.close()
 
         except:
             print "Error: ", sys.exc_info()[1]
