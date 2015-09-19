@@ -27,6 +27,7 @@ class MerraDatabase:
     
     ### Open database connection
     def DatabaseConnection(self):
+
         try:
             self.conn = psycopg2.connect(database=self.DataBaseName, user=self.Username, password=self.Password,host=self.hostIP, port=self.port)
             print " conn ",self.conn
@@ -39,16 +40,21 @@ class MerraDatabase:
         except psycopg2.Error as e:
             print e
 
+
+
     ### Create Table
     def CreateTable(self,Tablename):
+
         try:
             if(False == self.check_If_Table_Exist(Tablename)):
                 self.cur.execute("CREATE TABLE "+str(Tablename)+"( NAME  TEXT,AGE   INT );")
                 print "Table created successfully"
                 self.conn.commit()
+
         
         except psycopg2.Error as e:
             print e
+
 
 
     ### Check if Table exist
@@ -59,25 +65,32 @@ class MerraDatabase:
             self.cur.execute("select exists(select relname from pg_class where relname ='"+ Tablename + "');")
             result = self.cur.fetchone()[0]
 
+
         except psycopg2.Error as e:
             print e
  
+
         return result
         
         
 
     ### Create Table
     def CreateTableforFiles(self,Tablename):
+
         if(False == self.check_If_Table_Exist(Tablename)):
             try:
                 self.cur.execute("CREATE TABLE "+str(Tablename)+"( FileName  TEXT);")
                 print Tablename+" Table created successfully"
                 self.conn.commit()
 
+
             except psycopg2.Error as e:
                 print e
 
+
         self.tableforfilesadded = Tablename;
+
+
         
     #### Add Filename  in Table    
     def AddfilesnameinTable(self,filename):
@@ -85,12 +98,14 @@ class MerraDatabase:
             self.cur.execute("INSERT INTO "+self.tableforfilesadded+"(FileName) VALUES('"+str(filename)+"');")
             print filename+" Added successfully"      
             self.conn.commit()
+
  
         except psycopg2.Error as e:
             print e
         
-    #### Check If file exist in Table or Not    
-    
+
+
+    #### Check If file exist in Table or Not        
     def file_exist_in_db(self,filename):
         """ 
         Function name : file_exist_in_db
@@ -111,9 +126,11 @@ class MerraDatabase:
             else:
                 return True
 
+
         except psycopg2.Error as e:
             print e
         
+
       
     ### Create POSTGIS extension
     def CreatePostGISExtension(self):
@@ -122,9 +139,11 @@ class MerraDatabase:
             print "POSTGIS Extension Created"
             self.conn.commit() 
 
+
         except psycopg2.Error as e:
             print e
         
+
           
     ### Create Spatial Table
     def CreateSpatialTable(self,Tablename,AttributeName): 
@@ -134,8 +153,11 @@ class MerraDatabase:
             print "Spatial Table created successfully"
             self.conn.commit()    
 
+
         except psycopg2.Error as e:
             print e
+
+
     
     def AddColumnInTable(self,Tablename,Colname,Datatype):    
         try:
@@ -143,8 +165,11 @@ class MerraDatabase:
             print "Spatial Table created successfully"
             self.conn.commit()    
 
+
         except psycopg2.Error as e:
             print e
+
+
     
     #### Drop Table    
     def DropTable(self,Tablename):    
@@ -153,8 +178,11 @@ class MerraDatabase:
             print "Table Deleted successfully"
             self.conn.commit()   
 
+
         except psycopg2.Error as e:
             print e
+
+
    
     #### Add Data in Table    
     def AddData(self,name,age):
@@ -164,8 +192,11 @@ class MerraDatabase:
             print "Data Added successfully"      
             self.conn.commit()
 
+
         except psycopg2.Error as e:
             print e
+
+
     
     #### Add Spatial Data in Table    
     def AddSpatialData(self,tablename,time,lat,lon,alt,value):
@@ -176,6 +207,7 @@ class MerraDatabase:
             print "Spatial Data Added successfully"      
             self.conn.commit()
 
+
         except psycopg2.Error as e:
             print e
 
@@ -185,6 +217,7 @@ class MerraDatabase:
         try: 
             self.conn.close() 
             self.cur.close() 
+
 
         except psycopg2.Error as e:
             print e
@@ -205,6 +238,7 @@ class MerraDatabase:
             self.cur.execute("SELECT table_schema,table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_schema,table_name")
 
             rows = self.cur.fetchall()
+
             for row in rows:
                 print "dropping table: ", row[1]
                 self.cur.execute("drop table " + row[1] + " cascade")

@@ -14,6 +14,8 @@ class Merra_Product:
         print " Initialize MERRA Class "
         self.MerraProductsInfo={}
 
+
+
     ## Creating an Dictionary MerraProductsInfo that contains all Merra Products Info Like
     ## Info about all attributes in an merra file
     ## Dimension of the attribute whether 2D or 3D
@@ -21,6 +23,7 @@ class Merra_Product:
 
         TextFileName = os.getcwd() + "/merra_db_operation/MerraProductsInfo.txt"
         self.file = open(TextFileName, 'r')
+
 
         self.lines = self.file.readlines() # will append in the list out
         for line in self.lines:
@@ -40,8 +43,11 @@ class Merra_Product:
                     dimesion=Attinfo.split(":")[1]
                     self.MerraProductsInfo[Filename]['AttributesList'].append(Attribute)
                     self.MerraProductsInfo[Filename]['DIMList'].append(dimesion)
+
                  
         print "self.MerraProductsInfo : ",self.MerraProductsInfo        
+
+
 
     def ExtractMerraProductName(self,filename):
         self.MerraProductName=filename.split(".")[3]

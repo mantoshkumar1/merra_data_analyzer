@@ -34,7 +34,7 @@ mt = merra_tool(DB, Merra, Extract)
 
 mt.download_process_hdf_data()
 
+# Closing application
 mt.disconnect()
 
-#### End
 

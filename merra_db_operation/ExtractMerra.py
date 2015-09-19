@@ -30,6 +30,7 @@ class ExtractMerraFile:
         print "longitude_list : ",self.longitude_list
         print "longitude_len : ",self.longitude_len
 
+
         # Ydim is Lattitude
         lat = self.hdf.select('YDim')
         self.latitude_list = lat[:]
@@ -37,6 +38,7 @@ class ExtractMerraFile:
         print "latitude_list : ",self.latitude_list
         print "latitude_len : ",self.latitude_len
         
+
         ht = self.hdf.select('Height')
         self.height_list = ht[:]
         self.height_len=len(self.height_list)
@@ -53,10 +55,14 @@ class ExtractMerraFile:
       
 
     def ExtractData(self,timeInterval):
+
         # Read dataset.
         self.data4D = self.hdf.select(self.variablename)
+
+
         # TIME : HEIGHT(Altitude) : YDIM(Latitude, in degrees north) : XDIM(Longitude, in degrees east)
         self.data = np.array(self.data4D[timeInterval,:,:,:]).astype(np.float64)
+
  
         print " self.data ",self.data
  
@@ -64,6 +70,7 @@ class ExtractMerraFile:
         print " YDIM   Len (Datam[0]",len(self.data[0]) 
         print " XDIM   Len (Datam[0][0])",len(self.data[0][0]) 
         print self.data[0][0][0]
+
  
         # Retrieve the attributes.
         attrs = self.data4D.attributes(full=1)
