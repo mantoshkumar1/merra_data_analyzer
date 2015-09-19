@@ -287,7 +287,6 @@ You are now ready to use the merra tool.
 
 ### Who do I talk to? ###
 ---------------------------------------------------------------------------------------------------
-* Please see the contributors text file (contributors.txt) in home directory for complete info
 # LinkedIn  : de.linkedin.com/in/mantoshk
 # eMail     : mantosh.kumar@tum.de
 #             mantoshkumar1@gmail.com
