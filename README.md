@@ -74,14 +74,22 @@ Note : Please always remember that merra_analyzer is the home directory of this 
    USER_EMAIL_ADDR : 'user@tum.de',
    NASA FTP server uses email as password for login (even dummy email will work) 
 
-5. FTP_HOST_ADDR
+5. FTP_DEBUG_LEVEL
+   This is one of the FTP related setting.
+ 
+   FTP_DEBUG_LEVEL : 0, 
+   Use this setting to observe interacton of this tool with ftp server. You can choose one among \ 
+   0(none), 1(some output), 2 (max output).
+   
+
+6. FTP_HOST_ADDR
    This is one of the FTP related setting.
 
    FTP_HOST_ADDR : 'ftp.tum.de',
    FTP_HOST_ADDR : '1.2.3.4',
    Set FTP host address. Both Domain name and ip address are acceptable.
 
-6. FTP_HOME_DIR
+7. FTP_HOME_DIR
    This is one of the FTP related setting. It sets the home directory over ftp server.
 
    FTP_HOME_DIR : ["/"],
@@ -90,13 +98,6 @@ Note : Please always remember that merra_analyzer is the home directory of this 
    FTP_HOME_DIR : ["/x/y", "dat"],
    You can select multiple home directory over ftp server in which you want to crawl.
 
-7. FTP_DEBUG_LEVEL
-   This is one of the FTP related setting.
- 
-   FTP_DEBUG_LEVEL : 0, 
-   Use this setting to observe interacton of this tool with ftp server. You can choose one among \ 
-   0(none), 1(some output), 2 (max output).
-   
 8. PROCESSING_FILE_TYPE
    This is one of the FTP related setting.
 
