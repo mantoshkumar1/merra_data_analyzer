@@ -19,7 +19,7 @@ MEERA_ANALYZER_CFG = {
 
 
 
-                         # Eight General settings
+                         # Nine FTP settings
                          ########################################################################################################
 
                          # 1. Directory path where you want to download HDF files
@@ -32,61 +32,59 @@ MEERA_ANALYZER_CFG = {
                          # 3. NASA FTP server uses email as password for login (even dummy email will work)
                          USER_EMAIL_ADDR               :  'demo@tum.de',
 
-                         # 4. Tool DB Name
-                         MERRA_DB_NAME                 :  'merra',
+                         # 4. FTP host address **
+                         FTP_HOST_ADDR        :  'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
 
-                         # 5. Tool DB user name
-                         MERRA_DB_LOGIN                :  'postgres', #mantosh
+                         # 5. Home directory over ftp server **
+                         # If you are uncertain which should be your parent dir over ftp server, set it to ["/"]
+                         # Or, you can select multiple parent dir over ftp server in which you want to search. Ex:["/x/y", "dat"]
+                         FTP_HOME_DIR         :  ["data"],
 
-                         # 6. Tool DB password
-                         MERRA_DB_PASSWORD             :  'gnusmas', #password
- 
-                         # 7. Tool DB host ip
-                         MERRA_DB_HOST_IP              :  '127.0.0.1',
+                         # 6. Use this setting to observe interacton of this tool with ftp server
+                         #    0 = none, 1 = some output, 2 = max debugging output
+                         FTP_DEBUG_LEVEL      :  0,
 
-                         # 8. Toob DB port
-                         MERRA_DB_PORT                 :  '5432',
-
-                         ########################################################################################################
-
-
+                         # 7. Type of downloading/processing file **
+                         PROCESSING_FILE_TYPE :  '.hdf',
 
                          # Two network failure settings
-                         ########################################################################################################
+                         ##############################
 
-                         # 1. In case of network failure, number of maximum tries to reconnect with network
+                         # 8. In case of network failure, number of maximum tries to reconnect with network
                          MAX_ATTEMPTS_TO_DOWNLOAD :  11,
 
-                         # 2. If the connection dies, wait this long(seconds) before reconnecting
+                         # 9. If the connection dies, wait this long(seconds) before reconnecting
                          RETRY_TIMEOUT            :  15,
 
                          ########################################################################################################
 
 
 
-                         # Five technically advanced settings ( Caution: Are you sure you want to change these? )
+                         # Six MERRA DB settings
                          ########################################################################################################
                          
-                         # 1. FTP host address
-                         FTP_HOST_ADDR        :  'goldsmr3.sci.gsfc.nasa.gov', # '169.154.132.64'
+                         # 1. Tool DB Name
+                         MERRA_DB_NAME                 :  'merra',
 
-                         # 2. Home directory over ftp server
-                         # If you are uncertain which should be your parent dir over ftp server, set it to ["/"]
-                         # Or, you can select multiple parent dir over ftp server in which you want to search. Ex:["/x/y", "dat"]
-                         FTP_HOME_DIR         :  ["data"],
+                         # 2. Tool DB user name
+                         MERRA_DB_LOGIN                :  'postgres', #mantosh
 
-                         # 3. Use this setting to observe interacton of this tool with ftp server
-                         #    0 = none, 1 = some output, 2 = max debugging output
-                         FTP_DEBUG_LEVEL      :  0,
+                         # 3. Tool DB password
+                         MERRA_DB_PASSWORD             :  'gnusmas', #password
+ 
+                         # 4. Tool DB host ip **
+                         MERRA_DB_HOST_IP              :  '127.0.0.1', 
 
-                         # 4. Type of downloading/processing file
-                         PROCESSING_FILE_TYPE :  '.hdf',
+                         # 5. Toob DB port **
+                         MERRA_DB_PORT                 :  '5432',
 
-                         # 5. Delete all data saved in merra db, all tables will be droped
-                         RESET_MERRA_DB       :   False,
+                         # 6. Delete all data saved in merra db, all tables will be droped **
+                         RESET_MERRA_DB       :   False,               
 
                          ########################################################################################################
                       
+
+# Symbol ** : Technically advanced settings ( Caution: Are you sure you want to change these? )
                          
 }
 
