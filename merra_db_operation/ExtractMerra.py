@@ -1,8 +1,4 @@
 import os
-
-#import matplotlib as mpl
-#import matplotlib.pyplot as plt
-#from mpl_toolkits.basemap import Basemap
 import numpy as np
 from pyhdf.SD import SD, SDC
     
@@ -13,8 +9,8 @@ class ExtractMerraFile:
         print " ExtractMerraFile Init "
         
     def ConfigureMerraFiledetails(self,hdffile,variablename): 
-        self.hdffile=hdffile
-        self.variablename=variablename           
+        self.hdffile = hdffile
+        self.variablename = variablename           
         
     def HDFFileHandler(self):    
         self.hdf = SD(self.hdffile, SDC.READ)
@@ -26,7 +22,7 @@ class ExtractMerraFile:
         # Xdim is Lognitude
         lon = self.hdf.select('XDim')
         self.longitude_list = lon[:]
-        self.longitude_len=len(self.longitude_list)
+        self.longitude_len = len(self.longitude_list)
         print "longitude_list : ",self.longitude_list
         print "longitude_len : ",self.longitude_len
 
@@ -34,21 +30,21 @@ class ExtractMerraFile:
         # Ydim is Lattitude
         lat = self.hdf.select('YDim')
         self.latitude_list = lat[:]
-        self.latitude_len=len(self.latitude_list)
+        self.latitude_len = len(self.latitude_list)
         print "latitude_list : ",self.latitude_list
         print "latitude_len : ",self.latitude_len
         
 
         ht = self.hdf.select('Height')
         self.height_list = ht[:]
-        self.height_len=len(self.height_list)
+        self.height_len = len(self.height_list)
         print "height_list : ",self.height_list
         print "height_len : ",self.height_len
         
 
         t = self.hdf.select('Time')
         self.time_list = t[:]
-        self.time_len=len(self.time_list)
+        self.time_len = len(self.time_list)
         print "time_list : ",self.time_list
         print "time_len : ",self.time_len
         
