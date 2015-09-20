@@ -16,8 +16,11 @@ class Merra_Product:
     ### Initialize Merra Class
     def __init__(self, log):
 
-        self.MerraProductsInfo = {}
+        self.MerraProductsInfo = { }
         self.log = log
+
+        # setting MerraProductsInfo
+        self.ExtractingMerraProductsInfo()
 
         print "MERRA Class initialized"
         self.log.write('\nMERRA class initialized')

@@ -15,6 +15,7 @@ import psycopg2
 import sys
 
 from cfg import MEERA_ANALYZER_CFG, RESET_MERRA_DB
+from merra_db_operation.DBConfigFile import DatabaseTablesName
 
 class MerraDatabase:
 
@@ -29,7 +30,17 @@ class MerraDatabase:
         self.tableforfilesadded = None
         self.log                = log
 
-        print "MerraDatabase INIT"
+
+        # connect with db
+        self.DatabaseConnection()
+
+
+        # initializing FilesAdded table in db (use lowercase for file name) - that keeps track of used file names
+        tablename = DatabaseTablesName['FilesAdded'].lower()
+        self.CreateTableforFiles(tablename)
+
+
+        print "MerraDatabase class initialized"
         self.log.write('\nMerraDatabase class initialized')
 
 

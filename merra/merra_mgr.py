@@ -292,6 +292,14 @@ class merra_tool:
                     if(self.DB.file_exist_in_db(f_name)):
                         continue
 
+                    # check tool capability to handle this kind of hdf data, if No then no need to process it
+                    if(False == self.check_tool_hdf_capa(f_name)):
+                    
+                        print "************************************************************************************************"
+                        print "Currently MERRA tool can't handle this kind of hdf data " + f_name
+                        print "************************************************************************************************"
+                        continue
+
                     self.process_hdf_file(local_file, f_name)
 
                 else:
@@ -796,10 +804,9 @@ class merra_tool:
 
         capa = True
 
-        MerraProductName = self.Merra.ExtractMerraProductName(hdffilename)
-
         try:
 
+            MerraProductName = self.Merra.ExtractMerraProductName(hdffilename)
             Attribute_list = len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
 
         except:
