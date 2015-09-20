@@ -348,6 +348,7 @@ class merra_tool:
 
             self.directory = self.conn.pwd()
             print("Current directory: " + self.directory)
+            self.log.write("\nCurrent directory: " + str(self.directory))
 
  
             # listing all files/subdir inside this directoty

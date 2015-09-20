@@ -21,7 +21,7 @@ $ export PYTHONPATH=$PWD
 $ python scripts/hdf_script.py
 --------- Relax Now ----------
 
-Note : You can see the logging of this tool in home directory "log" file.
+Note : You can see the logging of this tool in home directory "log.log" file.
 
 # For advanced user / Developer only to manually configure MERRA DB
 $ psql
@@ -268,7 +268,7 @@ Note : Please always remember that merra_analyzer is the home directory of this 
      # Press 'y' for role as a superuser
 
    $ createdb YOUR_DB_NAME;
-   $ psql -U your_db_name;
+   $ psql -U YOUR_DB_NAME;
    $ CREATE DATABASE routing;
    $ \c routing
    $ CREATE EXTENSION postgis;

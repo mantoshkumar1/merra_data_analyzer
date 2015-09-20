@@ -11,7 +11,7 @@ import os
 cfg = cfg.MEERA_ANALYZER_CFG
 
 ##### Enabling logging of merra tool
-log_file = open('./log','a+')
+log_file = open('./log.log','a+')
 
 ##### MERRA products info handler 
 Merra = Merra_Product(log_file)
