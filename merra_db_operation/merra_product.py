@@ -74,8 +74,6 @@ class Merra_Product:
     def ExtractMerraProductName(self,filename):
 
         self.MerraProductName = filename.split(".")[3]
-        self.log.write('\n' + str(self.MerraProductName) + ' product has been fetched')
-
         return self.MerraProductName
       
       

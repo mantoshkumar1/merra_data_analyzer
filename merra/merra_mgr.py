@@ -178,16 +178,15 @@ class merra_tool:
             return
 
         
-        print '*** Connected to host "%s"' % self.host
+        print '*** Connected to ftp host "%s"' % self.host
+        self.log.write('\nSuccess : Connected to ftp host '  + str(self.host))
 
         
         # Welcome message sent by the server
         global run_once
         if(run_once):
             self.directory = self.conn.pwd()
-            print os.linesep #new line
-            print self.conn.getwelcome()
-            print os.linesep #new line
+            print "\n" + self.conn.getwelcome() + "\n"
             run_once = 0
      
 
@@ -249,7 +248,6 @@ class merra_tool:
         try:
 
             self.conn.cwd(curr_dir)
-            self.log.write('\nSuccess : dir moved to ' + str(curr_dir))
 
 
         except ftplib.error_perm as err:
@@ -628,14 +626,19 @@ class merra_tool:
         print "\n***************************************************"           
         print "Internet / FTP server down"
         print "Program Terminating"
-        self.log.write('\nError : internet / ftp server down - program terminating\n')
         print "***************************************************\n"          
 
         try: 
+            # closing db connection
+            self.DB.DatabaseClosed()
+
             self.conn.close()
+
         except:
             pass
-        
+       
+ 
+        self.log.write('\nError : internet / ftp server down - program terminating\n')
         raise SystemExit()
 
 
@@ -808,6 +811,7 @@ class merra_tool:
         try:
 
             MerraProductName = self.Merra.ExtractMerraProductName(hdffilename)
+            self.log.write('\n' + str(MerraProductName) + ' product is going to be fetched shortly')
             Attribute_list = len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
 
         except:
