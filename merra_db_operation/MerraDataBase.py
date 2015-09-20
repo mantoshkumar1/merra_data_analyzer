@@ -58,7 +58,7 @@ class MerraDatabase:
 
             self.cur = self.conn.cursor()
         
-            # Resetting merra db
+            # Resetting merra db if user said so
             if MEERA_ANALYZER_CFG[RESET_MERRA_DB]:
                 self.reset_merra_db()
 
@@ -115,21 +115,26 @@ class MerraDatabase:
             self.cur.execute("select exists(select relname from pg_class where relname ='"+ Tablename + "');")
             result = self.cur.fetchone()[0]
 
-            print str(Tablename) + ' already exists in db'
-            self.log.write('\n' + str(Tablename) + ' already exists in db')
+            if(result == True):
+                print "Table "  + str(Tablename) + ' already exists in db'
+                self.log.write('\nTable ' + str(Tablename) + ' already exists in db')
+
+            else:
+                print "Table "  + str(Tablename) + ' does not exist in db'
+                self.log.write('\nTable ' + str(Tablename) + ' does not exist in db')
 
 
         except psycopg2.Error as e:
 
-            print str(Tablename) + " does not exist in db - " + str(e)
-            self.log.write('\n' + str(Tablename) + ' does not exist in db - ' + str(e))
+            print "Table " + str(Tablename) + " does not exist in db - " + str(e)
+            self.log.write('\nTable ' + str(Tablename) + ' does not exist in db - ' + str(e))
 
 
         except:
 
             e = sys.exc_info()[0]
-            print str(Tablename) + " does not exist in db - " + str(e)
-            self.log.write('\n' + str(Tablename) + ' does not exist in db - ' + str(e))
+            print "Table " + str(Tablename) + " does not exist in db - " + str(e)
+            self.log.write('\nTable ' + str(Tablename) + ' does not exist in db - ' + str(e))
  
 
         return result
@@ -449,8 +454,8 @@ class MerraDatabase:
                     self.cur.execute("drop table " + row[1] + " cascade")
                     self.conn.commit()
 
-                    print "Table " + str(row[1]) + " droped"
-                    self.log.write('\nSuccess : Table ' + str(row[1]) + ' droped')
+                    print "Table " + str(row[1]) + " dropped"
+                    self.log.write('\nSuccess : Table ' + str(row[1]) + ' dropped')
 
                 except:
 

@@ -210,6 +210,7 @@ class merra_tool:
         if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
             print "Wir danken fur . Auf Wiedersehen!"
             print "Thank you for using this application!"
+            self.log.write('\nSuccess : program ends\n')
             return
         
         try:
@@ -226,7 +227,7 @@ class merra_tool:
             print "Thank you for using this application!"
             
         
-        self.log.write('\nProgram ends')
+        self.log.write('\nSuccess : Program ends\n')
 
 
 
@@ -627,7 +628,7 @@ class merra_tool:
         print "\n***************************************************"           
         print "Internet / FTP server down"
         print "Program Terminating"
-        self.log.write('\nError : internet / ftp server down - program terminating')
+        self.log.write('\nError : internet / ftp server down - program terminating\n')
         print "***************************************************\n"          
 
         try: 

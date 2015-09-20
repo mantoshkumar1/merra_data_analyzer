@@ -4,7 +4,6 @@
 
 import os
 
-
 ### Merra class is the Master Class that manages all the SUB classes objects to do various Task :
 ##   -  Fetching MERRA files from FTP server(TBD) 
 ##   -  Extracting MERRA data from downloaded MERRA files (ExtractMerraFile Class)
@@ -23,6 +22,13 @@ class Merra_Product:
         self.ExtractingMerraProductsInfo()
 
         print "MERRA Class initialized"
+
+
+        import time 
+        now = time.strftime("%c") 
+        self.log.write('\n\n')
+        self.log.write("\nExecution time : %s" % now)
+        self.log.write("\n=======================================================================================")
         self.log.write('\nMERRA class initialized')
 
 
