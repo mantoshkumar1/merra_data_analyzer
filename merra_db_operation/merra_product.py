@@ -15,9 +15,12 @@ class Merra_Product:
     
     ### Initialize Merra Class
     def __init__(self, log):
-        print " Initialize MERRA Class "
+
         self.MerraProductsInfo = {}
         self.log = log
+
+        print "MERRA Class initialized"
+        self.log.write('\nMERRA class initialized')
 
 
 
@@ -31,21 +34,26 @@ class Merra_Product:
 
 
         self.lines = self.file.readlines() # will append in the list out
+
         for line in self.lines:
+
             if not line.startswith("//") and not line.startswith("  "):
-                Fileinfo=line.split("##")
-                Filename=Fileinfo[0].split(":")[0]
-                Description=Fileinfo[0].split(":")[1]
-                self.MerraProductsInfo[Filename]={}
-                self.MerraProductsInfo[Filename]['Description']=Description
+
+                Fileinfo = line.split("##")
+                Filename = Fileinfo[0].split(":")[0]
+                Description = Fileinfo[0].split(":")[1]
+                self.MerraProductsInfo[Filename] = {}
+                self.MerraProductsInfo[Filename]['Description'] = Description
     
-                AttributesInfo=Fileinfo[1]
-                AttributesList=AttributesInfo.split(",")
-                self.MerraProductsInfo[Filename]['AttributesList']=[]
-                self.MerraProductsInfo[Filename]['DIMList']=[]
+                AttributesInfo = Fileinfo[1]
+                AttributesList = AttributesInfo.split(",")
+                self.MerraProductsInfo[Filename]['AttributesList'] = []
+                self.MerraProductsInfo[Filename]['DIMList'] = []
+
                 for Attinfo in AttributesList:
-                    Attribute=Attinfo.split(":")[0]
-                    dimesion=Attinfo.split(":")[1]
+
+                    Attribute = Attinfo.split(":")[0]
+                    dimesion = Attinfo.split(":")[1]
                     self.MerraProductsInfo[Filename]['AttributesList'].append(Attribute)
                     self.MerraProductsInfo[Filename]['DIMList'].append(dimesion)
 
@@ -55,7 +63,10 @@ class Merra_Product:
 
 
     def ExtractMerraProductName(self,filename):
-        self.MerraProductName=filename.split(".")[3]
+
+        self.MerraProductName = filename.split(".")[3]
+        self.log.write('\n' + str(self.MerraProductName) + ' product has been fetched')
+
         return self.MerraProductName
       
       
