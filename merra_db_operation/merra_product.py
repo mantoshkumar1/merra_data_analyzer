@@ -33,7 +33,7 @@ class Merra_Product:
 
 
 
-    ## Creating an Dictionary MerraProductsInfo that contains all Merra Products Info Like
+    ## Update MerraProductsInfo dict with all Merra Products Info Like
     ## Info about all attributes in an merra file
     ## Dimension of the attribute whether 2D or 3D
     def ExtractingMerraProductsInfo(self):
@@ -51,13 +51,13 @@ class Merra_Product:
                 Fileinfo = line.split("##")
                 Filename = Fileinfo[0].split(":")[0]
                 Description = Fileinfo[0].split(":")[1]
-                self.MerraProductsInfo[Filename] = {}
+                self.MerraProductsInfo[Filename] = { }
                 self.MerraProductsInfo[Filename]['Description'] = Description
     
                 AttributesInfo = Fileinfo[1]
                 AttributesList = AttributesInfo.split(",")
-                self.MerraProductsInfo[Filename]['AttributesList'] = []
-                self.MerraProductsInfo[Filename]['DIMList'] = []
+                self.MerraProductsInfo[Filename]['AttributesList'] = [ ]
+                self.MerraProductsInfo[Filename]['DIMList'] = [ ]
 
                 for Attinfo in AttributesList:
 

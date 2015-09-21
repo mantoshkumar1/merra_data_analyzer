@@ -427,7 +427,7 @@ class merra_tool:
             if self.isdir(entry):
                  self.dir_list.append(entry)
 
-            elif entry.endswith(cfg[PROCESSING_FILE_TYPE]):
+            elif entry.endswith(cfg[FTP_DOWNLOADING_FILE_TYPE]):
                  self.hdffile_list.append(entry) # full path
 
 
@@ -690,7 +690,7 @@ class merra_tool:
 
 
         for dirpath, dirnames, filenames in os.walk(dir_path):
-            for filename in [f for f in filenames if f.endswith(cfg[PROCESSING_FILE_TYPE])]:
+            for filename in [f for f in filenames if f.endswith(cfg[FTP_DOWNLOADING_FILE_TYPE])]:
                 files_path_list.append(os.path.join(dirpath, filename))
 
 
@@ -728,18 +728,19 @@ class merra_tool:
 
         MerraProductName = self.Merra.ExtractMerraProductName(hdffilename)
         print "MerraProductName : ", MerraProductName
+        self.log.write('\n' + str(MerraProductName) + ' product is going to be fetched shortly')
 
 
         Attribute_list = len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
     
-        for counter in range(0,Attribute_list):
+        for counter in range(0, Attribute_list):
         
             AttributeName = self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'][counter]
             Dim = self.Merra.MerraProductsInfo[MerraProductName]['DIMList'][counter]
             print "AttributeName  : ",AttributeName
             print "Dim    : ",Dim
 
-            self.Extract.ConfigureMerraFiledetails(hdffile,AttributeName)
+            self.Extract.ConfigureMerraFiledetails(hdffile, AttributeName)
             self.Extract.HDFFileHandler()
             self.Extract.ExtractDataDimesions()
         
@@ -811,7 +812,6 @@ class merra_tool:
         try:
 
             MerraProductName = self.Merra.ExtractMerraProductName(hdffilename)
-            self.log.write('\n' + str(MerraProductName) + ' product is going to be fetched shortly')
             Attribute_list = len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
 
         except:

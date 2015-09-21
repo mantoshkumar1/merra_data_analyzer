@@ -12,7 +12,7 @@ import cfg
 cfg = cfg.MEERA_ANALYZER_CFG
 
 ##### Enabling logging of merra tool
-log_file = open('./log.log','a+')
+log_file = open(cfg[MERRA_LOGGING_FILE_PATH], 'a+')
 
 
 ##### MERRA products info handler 
@@ -23,7 +23,7 @@ Merra = Merra_Product(log_file)
 Extract = ExtractMerraFile(log_file) 
 
 
-##### DataBase Initialization handler
+##### MERRA DataBase handler
 DB = MerraDatabase(cfg[MERRA_DB_NAME], cfg[MERRA_DB_LOGIN], cfg[MERRA_DB_PASSWORD], cfg[MERRA_DB_HOST_IP], \
                    cfg[MERRA_DB_PORT], log_file)
 
@@ -37,7 +37,7 @@ mt.download_process_hdf_data()
 mt.disconnect()
 
 
-#####closing log file
+##### Closing log file
 log_file.close()
 
 

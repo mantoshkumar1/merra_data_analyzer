@@ -6,16 +6,21 @@ from merra.merra_constants import *
 
 # NOTE: Every field is assigned default values, you can change a/o your need
 
-MEERA_ANALYZER_CFG = {  
-                         # Use below setting only&only if you want to use already downloaded HDF files. \ 
-                         # Otherside always set it to None (No connection with internet is needed in this case).
+MEERA_ANALYZER_CFG = { 
+                         
+                         # Merra tool Logging file absolute / relative path
+                         MERRA_LOGGING_FILE_PATH   :  './log.log',
+
+ 
+                         # Use this setting only&only if you want to use local HDF files (Internet not required). \ 
+                         # Otherside always set it to None.
                          #
                          # If you want to enable this setting, Enter the parent directory path of the downloaded files, \
                          #    - it will find all the hdf files stored inside this directory & its subdirectories.
                          #
-                         # Note: If you enable this setting then all below other settings related with FTP server will \
+                         # Note: If you enable this setting then all settings related with FTP server will \
                          #       automatically become idle.
-                         YOUR_LOCAL_HDFFILE_DIR_PATH   : 'merra_downloaded_data',
+                         YOUR_LOCAL_HDFFILE_DIR_PATH   : '/home/mantosh/Desktop/new_hdf_data', #None,
 
 
 
@@ -45,7 +50,7 @@ MEERA_ANALYZER_CFG = {
                          FTP_HOME_DIR                  :  ["data/s4pa/MERRA/MAI6NVANA.5.2.0"], #["data"],
 
                          # 7. Type of downloading/processing file **
-                         PROCESSING_FILE_TYPE          :  '.hdf',
+                         FTP_DOWNLOADING_FILE_TYPE          :  '.hdf',
 
                          # Two network failure settings
                          ##############################

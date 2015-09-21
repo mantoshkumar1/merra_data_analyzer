@@ -34,11 +34,17 @@ $ \q         (exit from psql prompt)
 ---------------------------------------------------------------------------------------------------
 You can adjust the control settings of this tool by modifying "cfg.py" in home directory.
 By default every field is assigned some values. Each field is explained below in this section.
-Note : Please always remember that merra_analyzer is the home directory of this tool. All relative addresses should be \
-       computed based on this.
+Note : Please be aware that merra_analyzer is the home directory of this tool. All relative addresses should be \
+       computed relative to this directory.
+
+1. MERRA_LOGGING_FILE_PATH
+
+   # You can use this field to specify the location where you want merra tool logging file. Enter absolute / relative path of file
+     MERRA_LOGGING_FILE_PATH  =   '/user/log.log,
+     MERRA_LOGGING_FILE_PATH  =   './../log.log,
 
 
-1. YOUR_LOCAL_HDFFILE_DIR_PATH
+2. YOUR_LOCAL_HDFFILE_DIR_PATH
 
    # YOUR_LOCAL_HDFFILE_DIR_PATH = '/user/local_hdf_files',
      You can use this setting to populate the MERRA DB with local HDF files.
@@ -52,14 +58,16 @@ Note : Please always remember that merra_analyzer is the home directory of this 
    # YOUR_LOCAL_HDFFILE_DIR_PATH = None,
      You can use this setting for crawling FTP server and finding all HDF files over there.
 
-2. MERRA_DATA_DOWNLOAD_DIR_PATH
+
+3. MERRA_DATA_DOWNLOAD_DIR_PATH
    This is one of the FTP related setting.
 
    MERRA_DATA_DOWNLOAD_DIR_PATH = /user/download_hdf_dir,
    Set your choice of directory path where you want to download HDF files. By default those files will be \ 
    downloaded in "merra_downloaded_data" directory.
 
-3. SAVE_DOWNLOADING_DATA
+
+4. SAVE_DOWNLOADING_DATA
    This is one of the FTP related setting.
 
    SAVE_DOWNLOADING_DATA = True,
@@ -68,13 +76,15 @@ Note : Please always remember that merra_analyzer is the home directory of this 
    SAVE_DOWNLOADING_DATA = False,
    if you do not want to store downloading files. After DB population it will be deleted.
 
-4. USER_EMAIL_ADDR   
+
+5. USER_EMAIL_ADDR   
    This is one of the FTP related setting.
 
    USER_EMAIL_ADDR : 'user@tum.de',
    NASA FTP server uses email as password for login (even dummy email will work) 
 
-5. FTP_DEBUG_LEVEL
+
+6. FTP_DEBUG_LEVEL
    This is one of the FTP related setting.
  
    FTP_DEBUG_LEVEL : 0, 
@@ -82,15 +92,20 @@ Note : Please always remember that merra_analyzer is the home directory of this 
    0(none), 1(some output), 2 (max output).
    
 
-6. FTP_HOST_ADDR
+7. FTP_HOST_ADDR
    This is one of the FTP related setting.
 
    FTP_HOST_ADDR : 'ftp.tum.de',
    FTP_HOST_ADDR : '1.2.3.4',
    Set FTP host address. Both Domain name and ip address are acceptable.
 
-7. FTP_HOME_DIR
+
+8. FTP_HOME_DIR
    This is one of the FTP related setting. It sets the home directory over ftp server.
+   Let assume you want to download from "ftp.tum.de/x/y"
+   So set::   FTP_HOST_ADDR : 'ftp.tum.de'
+   and set::  FTP_HOME_DIR  : '/x/y'
+
 
    FTP_HOME_DIR : ["/"],
    If you are uncertain which should be your home dir over ftp server, set it to ["/"]
@@ -98,40 +113,48 @@ Note : Please always remember that merra_analyzer is the home directory of this 
    FTP_HOME_DIR : ["/x/y", "dat"],
    You can select multiple home directory over ftp server in which you want to crawl.
 
-8. PROCESSING_FILE_TYPE
+
+8. FTP_DOWNLOADING_FILE_TYPE
    This is one of the FTP related setting.
 
-   PROCESSING_FILE_TYPE : '.hdf',
-   Set the type of downloading/processing file from FTP server.
+   FTP_DOWNLOADING_FILE_TYPE : '.hdf',
+   Set the type of downloading file from FTP server.
 
-9. MAX_ATTEMPTS_TO_DOWNLOAD
-   This is one of the FTP related setting.
 
-   MAX_ATTEMPTS_TO_DOWNLOAD : 11,
-   Set the number of maximum tries to reconnect with network in case of network failure while downloading a file.
+10. MAX_ATTEMPTS_TO_DOWNLOAD
+    This is one of the FTP related setting.
 
-10. RETRY_TIMEOUT
+    MAX_ATTEMPTS_TO_DOWNLOAD : 11,
+    Set the number of maximum tries to reconnect with network in case of network failure while downloading a file.
+
+
+11. RETRY_TIMEOUT
     This is one of the FTP related setting.
 
     RETRY_TIMEOUT : 15,
     Set this waiting time(seconds) before reconnecting while downloading if the connection dies.
 
-11. MERRA_DB_NAME : 'merra',
+12. MERRA_DB_NAME : 'merra',
     This is one of the MERRA DB related setting. Enter the name of your db.
 
-12. MERRA_DB_LOGIN : 'postgres',
+
+13. MERRA_DB_LOGIN : 'postgres',
     This is one of the MERRA DB related setting. Enter your user name / login of db
-    
-13. MERRA_DB_PASSWORD : 'password',
+  
+  
+14. MERRA_DB_PASSWORD : 'password',
     This is one of the MERRA DB related setting. Enter your password of your db.
 
-14. MERRA_DB_HOST_IP : '127.0.0.1',
+
+15. MERRA_DB_HOST_IP : '127.0.0.1',
     This is one of the MERRA DB related setting. Set host ip of your db.
 
-15. MERRA_DB_PORT : '5432',
+
+16. MERRA_DB_PORT : '5432',
     This is one of the MERRA DB related setting. Set the port of your db.
 
-16. RESET_MERRA_DB
+
+17. RESET_MERRA_DB
     This is one of the MERRA DB related setting. Set the port of your db.
 
     RESET_MERRA_DB : True,

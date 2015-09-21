@@ -35,7 +35,7 @@ class MerraDatabase:
         self.DatabaseConnection()
 
 
-        # initializing FilesAdded table in db (use lowercase for file name) - that keeps track of used file names
+        # initializing FilesAdded table in db (use lowercase for table name/s) - it keeps track of already populated hdf files
         tablename = DatabaseTablesName['FilesAdded'].lower()
         self.CreateTableforFiles(tablename)
 
@@ -54,7 +54,7 @@ class MerraDatabase:
                                          host=self.hostIP, port=self.port)
 
             print "Successfully connected with db" + str(self.conn)
-            self.log.write('\nSuccessfully connected with db' + str(self.conn))
+            self.log.write('\nSuccess : connected with db' + str(self.conn))
 
             self.cur = self.conn.cursor()
         
@@ -84,7 +84,7 @@ class MerraDatabase:
 
             if(False == self.check_If_Table_Exist(Tablename)):
 
-                self.cur.execute("CREATE TABLE "+str(Tablename)+"( NAME  TEXT,AGE   INT );")
+                self.cur.execute("CREATE TABLE " + str(Tablename) + "( NAME  TEXT,AGE   INT );")
                 self.conn.commit()
 
                 print "Success : Table " + str(Tablename) + " created"
@@ -148,7 +148,7 @@ class MerraDatabase:
 
             try:
 
-                self.cur.execute("CREATE TABLE "+str(Tablename)+"( FileName  TEXT);")
+                self.cur.execute("CREATE TABLE " + str(Tablename) + "( FileName  TEXT);")
                 self.conn.commit()
 
                 print Tablename+" Table created successfully"
@@ -177,17 +177,17 @@ class MerraDatabase:
 
         try:
 
-            self.cur.execute("INSERT INTO "+self.tableforfilesadded+"(FileName) VALUES('"+str(filename)+"');")
+            self.cur.execute("INSERT INTO " + self.tableforfilesadded + "(FileName) VALUES('" + str(filename) + "');")
             self.conn.commit()
 
-            print filename + " file name inserted successfully in table " + str(self.tableforfilesadded)
-            self.log.write('\nSuccess : ' + str(filename) + ' file name inserted in ' + str(self.tableforfilesadded))
+            print "Success : File name '" + str(filename) + "' inserted in table '" + str(self.tableforfilesadded) + "'"
+            self.log.write('\nSuccess : File name = ' + str(filename) + ' inserted in table ' + str(self.tableforfilesadded))
 
  
         except psycopg2.Error as e:
 
             print "Error : " + str(e)
-            self.log.write('\nError : insertion failed for ' + str(filename) + ' in ' +  
+            self.log.write('\nError : insertion failed for file name ' + str(filename) + ' in table ' +  
                               str(self.tableforfilesadded) + ' : ' + str(e))
 
 
@@ -195,7 +195,7 @@ class MerraDatabase:
 
             e = sys.exc_info()[0]
             print "Error : " + str(e)
-            self.log.write('\nError : insertion failed for ' + str(filename) + ' in ' +  \
+            self.log.write('\nError : insertion failed for file name ' + str(filename) + ' in table ' +  \
                               str(self.tableforfilesadded) + ' : ' + str(e))
 
 
@@ -254,8 +254,8 @@ class MerraDatabase:
             self.cur.execute("CREATE EXTENSTION POSTGIS;")
             self.conn.commit()
  
-            print "POSTGIS Extension Created"
-            self.log.write('\nSuccess : POSTGIS Extension Created')
+            print "POSTGIS Extension created"
+            self.log.write('\nSuccess : POSTGIS Extension created')
 
 
         except psycopg2.Error as e:
@@ -419,14 +419,14 @@ class MerraDatabase:
         except psycopg2.Error as e:
 
             print "Error: database connection failed to close - ", str(e)
-            self.log.write('\nError : database connection failed to close- ' + str(e))
+            self.log.write('\nError : database connection failed to close - ' + str(e))
 
 
         except:
 
             e = sys.exc_info()[0]
             print "Error: database connection failed to close - ", str(e)
-            self.log.write('\nError : database connection failed to close- ' + str(e))
+            self.log.write('\nError : database connection failed to close - ' + str(e))
 
 
 
@@ -477,7 +477,7 @@ class MerraDatabase:
         except:
             
             e = sys.exc_info()[1]
-            print "Error : db reset failed - ", e
+            print "Error : db reset failed - ", str(e)
             self.log.write('\nError: db reset failed - ' + str(e))
 
 
