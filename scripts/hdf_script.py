@@ -1,45 +1,45 @@
 #!/usr/bin/python2.7
 
+import os
 
-#### All Python Files Import
+#### Importing MERRA tool modules
 from merra.merra_mgr import *
 from merra_db_operation.ExtractMerra import *
 from merra_db_operation.merra_product import *
 from merra_db_operation.MerraDataBase import *
 import cfg
-import os
 
 cfg = cfg.MEERA_ANALYZER_CFG
 
-##### MERRA PRODUCTS Info handler 
-Merra = Merra_Product()
-Merra.ExtractingMerraProductsInfo()
+##### Enabling logging of merra tool
+log_file = open(cfg[MERRA_LOGGING_FILE_PATH], 'a+')
 
 
-##### MERRA Data Extraction handler
-Extract = ExtractMerraFile() 
-
-#### DataBase Initialization
-DB = MerraDatabase(cfg[MERRA_DB_NAME], cfg[MERRA_DB_LOGIN], cfg[MERRA_DB_PASSWORD], cfg[MERRA_DB_HOST_IP], cfg[MERRA_DB_PORT])
-
-DB.DatabaseConnection()
-tablename = DatabaseTablesName['FilesAdded']
-## Table name should be in LowerCase only
-tablename = tablename.lower()
-flag = DB.check_If_Table_Exist(tablename)
-### Handling needed to be check
-if(flag == False):
-    DB.CreateTableforFiles(tablename)
+##### MERRA products info handler 
+Merra = Merra_Product(log_file)
 
 
-#### MERRA FTP HANDLER
-mt = merra_tool(DB, Merra, Extract)
+##### MERRA data extraction handler
+Extract = ExtractMerraFile(log_file) 
 
+
+##### MERRA DataBase handler
+DB = MerraDatabase(cfg[MERRA_DB_NAME], cfg[MERRA_DB_LOGIN], cfg[MERRA_DB_PASSWORD], cfg[MERRA_DB_HOST_IP], \
+                   cfg[MERRA_DB_PORT], log_file)
+
+
+##### MERRA FTP HANDLER
+mt = merra_tool(DB, Merra, Extract, log_file)
 mt.download_process_hdf_data()
 
 
-
+##### Closing application
 mt.disconnect()
 
-#### End
+
+##### Closing log file
+log_file.close()
+
+
+
 

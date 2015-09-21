@@ -6,7 +6,7 @@
 MERRA_DATA_DOWNLOAD_DIR_PATH       =     100
 FTP_HOST_ADDR                      =     101
 FTP_HOME_DIR                       =     102
-PROCESSING_FILE_TYPE               =     103
+FTP_DOWNLOADING_FILE_TYPE          =     103
 MERRA_DATA_DOWNLINK_ADDR           =     104
 SAVE_DOWNLOADING_DATA              =     105
 FTP_DEBUG_LEVEL                    =     106
@@ -19,5 +19,6 @@ MERRA_DB_LOGIN                     =     112
 MERRA_DB_PASSWORD                  =     113
 MERRA_DB_HOST_IP                   =     114
 MERRA_DB_PORT                      =     115
-
+RESET_MERRA_DB                     =     116
+MERRA_LOGGING_FILE_PATH            =     117
 

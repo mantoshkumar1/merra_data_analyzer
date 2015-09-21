@@ -12,12 +12,12 @@ import logging
 import time
 import threading
 from datetime import datetime
-from merra_db_operation.DBConfigFile import *
 
 
 # importing merra tool modules
 import cfg
 from merra.merra_constants import *
+from merra_db_operation.DBConfigFile import *
 
 cfg = cfg.MEERA_ANALYZER_CFG
 
@@ -66,11 +66,12 @@ def setInterval(interval, times = -1):
 
 class merra_tool:
 
-    def __init__(self, DB, Merra, Extract):
+    def __init__(self, DB, Merra, Extract, log):
 
         self.DB      =  DB
         self.Merra   =  Merra
         self.Extract =  Extract
+        self.log     =  log
       
         if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
             return
@@ -163,25 +164,29 @@ class merra_tool:
 
 
         except ftplib.error_perm as err:
-            print("Error: {}".format(str(err)))
+
+            print("Error: failed to connect with ftp {}".format(str(err)))
+            self.log.write('\nError : failed to connect with ftp ' + str(err))
             return
       
  
         except:
-            print ("An error occured")
+
+            e = sys.exc_info()[0]
+            print "Error: failed to connect with ftp - " + str(e)
+            self.log.write('\nError : failed to connect with ftp - ' + str(e))
             return
 
         
-        print '*** Connected to host "%s"' % self.host
+        print '*** Connected to ftp host "%s"' % self.host
+        self.log.write('\nSuccess : Connected to ftp host '  + str(self.host))
 
         
         # Welcome message sent by the server
         global run_once
         if(run_once):
             self.directory = self.conn.pwd()
-            print os.linesep #new line
-            print self.conn.getwelcome()
-            print os.linesep #new line
+            print "\n" + self.conn.getwelcome() + "\n"
             run_once = 0
      
 
@@ -204,6 +209,7 @@ class merra_tool:
         if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
             print "Wir danken fur . Auf Wiedersehen!"
             print "Thank you for using this application!"
+            self.log.write('\nSuccess : program ends\n')
             return
         
         try:
@@ -219,6 +225,9 @@ class merra_tool:
         else:
             print "Thank you for using this application!"
             
+        
+        self.log.write('\nSuccess : Program ends\n')
+
 
 
     def move_to_dir(self, curr_dir = None):
@@ -232,22 +241,29 @@ class merra_tool:
         Return        :
         """
 
+        if curr_dir is None:
+            curr_dir = self.directory
+
+
         try:
-            if(curr_dir is not None):
-                self.conn.cwd(curr_dir)
 
-            else:
-                self.conn.cwd(self.directory)
+            self.conn.cwd(curr_dir)
 
-      
-        except ftplib.error_perm:
-            print 'Error: cannot move to "%s"' % curr_dir
-            
+
+        except ftplib.error_perm as err:
+
+            print "Error : cannot move dir to " + str(curr_dir) + " - " + str(err)
+            self.log.write('\nError: cannot move dir to ' + str(curr_dir) + ' - ' + str(err))
+
 
         except:
-            print 'Some error occured'
+
+            e = sys.exc_info()[0]
+            print "Error : cannot move dir to " + str(curr_dir) + " - " + str(e)
+            self.log.write('\nError: cannot move dir to ' + str(curr_dir) + ' - ' + str(e))
  
-    
+   
+ 
     def download_process_hdf_data(self):
         """
         Function name : download_process_hdf_data
@@ -261,6 +277,8 @@ class merra_tool:
 
         if cfg[YOUR_LOCAL_HDFFILE_DIR_PATH] is not None:
 
+            self.log.write('\nWorking on local hdf files')
+
             files_path_list = self.find_files_in_dir(cfg[YOUR_LOCAL_HDFFILE_DIR_PATH])
          
             for local_file in files_path_list:
@@ -269,15 +287,30 @@ class merra_tool:
                 #    - if yes then populate the DB (Never trust user, always check)
                 if os.path.isfile(local_file) and os.access(local_file, os.R_OK):
                     base_name, f_name = os.path.split(local_file)
+
+                    if(self.DB.file_exist_in_db(f_name)):
+                        continue
+
+                    # check tool capability to handle this kind of hdf data, if No then no need to process it
+                    if(False == self.check_tool_hdf_capa(f_name)):
+                    
+                        print "************************************************************************************************"
+                        print "Currently MERRA tool can't handle this kind of hdf data " + f_name
+                        print "************************************************************************************************"
+                        continue
+
                     self.process_hdf_file(local_file, f_name)
 
                 else:
                     print "\n********************************************************************"
                     print local_file + " : not existing / read access permission denied"
+                    self.log.write('\nError : ' + str(local_file) +  ' : not existing / read access permission denied')
                     print "********************************************************************\n"
 
             return
                 
+
+        self.log.write('\nWorking on remote ftp server')
 
         for home_dir in cfg[FTP_HOME_DIR]:
             self.crwal_all_dir(home_dir)
@@ -298,16 +331,22 @@ class merra_tool:
         new_dirs = []
 
         try:
+
             self.directory = self.conn.pwd()
 
         except AttributeError as err:
+
             print("Error: {}".format(str(err)))
+            self.log.write('\nError : ' + str(err))
             self.shutdown()
 
         except:
-            print "Some error occured"
+
+            e = sys.exc_info()[0]
+            print e
+            self.log.write('\nError : Some error occured in crwal_all_dir function - ' + str(e))
             self.shutdown()
-       
+
  
         if self.isdir(dir_name):
             print("Changing directory from " + self.directory + " to " + dir_name)
@@ -316,6 +355,7 @@ class merra_tool:
 
             self.directory = self.conn.pwd()
             print("Current directory: " + self.directory)
+            self.log.write("\nCurrent directory: " + str(self.directory))
 
  
             # listing all files/subdir inside this directoty
@@ -323,17 +363,29 @@ class merra_tool:
             self.organise_dir_files(new_dirs)
 
              
-            print("Total HDF files found so far inside " + dir_name + ": " + str(len(self.hdffile_list)))
+            print("Number of HDF files inside " + dir_name + " = " + str(len(self.hdffile_list)))
+            self.log.write('\nNumber of HDF files inside ' + str(dir_name) + ' = ' + str(len(self.hdffile_list)))
            
  
-            # download hdf files stored in self.hdffile_list
+            # Now download hdf files stored in self.hdffile_list
             for hdf_file in self.hdffile_list:
-                if(self.DB.file_exist_in_db(hdf_file)):
-                    print "\n" + hdf_file + " data is already available in MERRA DB"
+
+                # check if this hdf_file already exists in db, if yes do not download
+                if(True == self.DB.file_exist_in_db(hdf_file)):
                     continue
+                   
+              
+                # check tool capability to handle this kind of hdf data, if No then no need to download any hdf frm this dir 
+                if(False == self.check_tool_hdf_capa(hdf_file)):
                     
-                    
+                    print "************************************************************************************************"
+                    print "Currently MERRA tool can't handle this kind of hdf data " + hdf_file
+                    print "************************************************************************************************"
+                    break
+
+
                 print "\n" + "Downloading starts for : " + hdf_file
+                self.log.write('\nDownloading starts for : ' + str(hdf_file))
                 print "************************************************************************"
                 if(self.download_file(hdf_file)):
                 #if 0:
@@ -344,6 +396,7 @@ class merra_tool:
                     if cfg[SAVE_DOWNLOADING_DATA] is False:
                         self.delete_file(hdf_file)
                         print 'file {} is deleted as per user instruction.'.format(hdf_file)
+
 
 
             self.hdffile_list = [ ]
@@ -374,7 +427,7 @@ class merra_tool:
             if self.isdir(entry):
                  self.dir_list.append(entry)
 
-            elif entry.endswith(cfg[PROCESSING_FILE_TYPE]):
+            elif entry.endswith(cfg[FTP_DOWNLOADING_FILE_TYPE]):
                  self.hdffile_list.append(entry) # full path
 
 
@@ -400,7 +453,8 @@ class merra_tool:
                 pass # files remains []
 
         except:
-            print "Some error occured"
+            e = sys.exc_info()[0]
+            self.log.write('\nError : ' + str(e))
             pass # files remains []
             
 
@@ -421,6 +475,7 @@ class merra_tool:
         """
 
         try:
+
             prev_path = self.conn.pwd()
             self.conn.cwd(dir_name)
             self.conn.cwd(prev_path)
@@ -428,10 +483,14 @@ class merra_tool:
 
 
         except ftplib.all_errors:
+
             return False
 
         except:
-            print "Some error occured"
+
+            e = sys.exc_info()[0]
+            print "Error : " + str(e)
+            self.log.write('\nError : some error occured in isdir function ' + str(e))
             raise
 
 
@@ -502,6 +561,7 @@ class merra_tool:
                     time.sleep(self.retry_timeout)
                     logging.info('reconnect')
                     print 'reconnecting'
+                    self.log.write('\nReconnecting while downloading ' + str(file_name))
 
 
             #stop monitor
@@ -511,12 +571,14 @@ class merra_tool:
             if not res.startswith('226 Transfer complete'):
                 logging.error('Downloading of file {0} failed.'.format(file_name))
                 print 'Downloading of file {0} failed.'.format(file_name)
+                self.log.write('\nError : Downloading of file ' + str(file_name) + ' failed')
                 self.delete_file(file_name)
                 return False
 
             else:
                 logging.info('File {} successfully downloaded.'.format(file_name))
                 print 'File {} successfully downloaded.'.format(file_name)
+                self.log.write('\nSuccess : ' + str(file_name) + ' downloaded')
 
             return True
 
@@ -535,12 +597,17 @@ class merra_tool:
         """
          
         file_full_path = os.path.join(self.download_path, file_name)
+
         try:
+
             os.remove(file_full_path)
-        except OSError:
-            pass
+            self.log.write('\nSuccess : ' + str(file_name) + ' deleted')
+
+
         except:
-            pass
+
+            e = sys.exc_info()[0]
+            self.log.write('\nError : ' + str(e))
 
 
 
@@ -562,10 +629,16 @@ class merra_tool:
         print "***************************************************\n"          
 
         try: 
+            # closing db connection
+            self.DB.DatabaseClosed()
+
             self.conn.close()
+
         except:
             pass
-        
+       
+ 
+        self.log.write('\nError : internet / ftp server down - program terminating\n')
         raise SystemExit()
 
 
@@ -611,18 +684,20 @@ class merra_tool:
             print "\n********************************************************************"
             print "Directory " + dir_path + " doesn't exist\n"
             print "Set correct path in  YOUR_LOCAL_HDFFILE_DIR_PATH in cfg.py"
+            self.log.write('\nError : dir ' + str(dir_path) + ' does not exist, set correct local hdf files dir path in cfg.py')
             print "********************************************************************\n"
             return files_path_list
 
 
         for dirpath, dirnames, filenames in os.walk(dir_path):
-            for filename in [f for f in filenames if f.endswith(cfg[PROCESSING_FILE_TYPE])]:
+            for filename in [f for f in filenames if f.endswith(cfg[FTP_DOWNLOADING_FILE_TYPE])]:
                 files_path_list.append(os.path.join(dirpath, filename))
 
 
         if not files_path_list: # empty list
             print "\n********************************************************************"
             print "There is no HDF file inside " + dir_path + " directory"
+            self.log.write('\nWarning : No hdf files inside ' + str(dir_path) + ' directory')
             print "********************************************************************\n"
 
 
@@ -655,12 +730,11 @@ class merra_tool:
         MerraProductDate = self.Merra.ExtractMerraProductDate(hdffilename)
         print " MerraProductName ", MerraProductName
         print " MerraProductDate ", MerraProductDate
-        name = raw_input("What is your name? ") 
+        self.log.write('\n' + str(MerraProductName) + ' product is going to be fetched shortly')
 
 
+        Attribute_list = len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
 
-        Attribute_list=len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
-    
         for counter in range(0,Attribute_list):
         
             AttributeName = self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'][counter]
@@ -682,8 +756,6 @@ class merra_tool:
                             
                     print self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]        
                     print MerraProduct_Time
-                    name = raw_input("abc? ") 
-                    
                     
                     
                     self.Extract.ExtractData_3D(timeInterval)
@@ -738,7 +810,6 @@ class merra_tool:
                     
                     print self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]        
                     print MerraProduct_Time
-                    name = raw_input("abc? ") 
                     
                             
                     self.Extract.ExtractData_2D(timeInterval)
@@ -756,7 +827,7 @@ class merra_tool:
                         self.DB.Create2DTable(tablename,AttributeName)       
                  
                     time = MerraProduct_Time
-            
+
                     counter = 0
                     for lat in range(0,self.Extract.latitude_len):
                         if(counter > 1):
@@ -775,41 +846,38 @@ class merra_tool:
                             
                     print" Total Number of Elements Inserted : ",counter                
                 
-                
-                
-                
-                        
-        # adding downloaded hdf file name in DB 
         self.DB.AddfilesnameinTable(hdffilename)   
     
 
-
-#    def file_exist_in_db(self, file_name):
+    def check_tool_hdf_capa(self, hdffilename):
         """ 
-        Function name : file_exist_in_db
+        Function name : check_tool_hdf_capa
 
-        Description   : Check whether this file(file_name) has already been used to populate the DB or not
+        Description   :  Checks whether this tool can handle this type of hdf data or not.
+                         This function needs name of the downloading file.
 
-        Parameters    : file_name (String, name of file)
-         
-        Return        : If file_name has already been used to populate DB, returns True
-                        else return False
+
+        Parameters    : hdffilename (String : Name of hdf file)
+
+        Return        : if it can handle this kind of hdf data then return True else return False
+
         """
 
- #       return False
 
+        capa = True
 
-    def reset_merra_db(self):
-        """ 
-        Function name : reset_merra_db
+        try:
 
-        Description   : This function will wipe out every info saved in merra DB (Are you sure to make MERRA DB dumb ?)
+            MerraProductName = self.Merra.ExtractMerraProductName(hdffilename)
+            Attribute_list = len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
 
-        Parameters    : 
-         
-        Return        : 
-        """
+        except:
 
-        pass
+            capa = False
+            self.log.write('\nError : HDF format not supported ' + str(hdffilename))
 
- 
+        
+        return capa
+   
+
+  

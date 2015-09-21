@@ -2,26 +2,170 @@
 # This file is part of merra_data_analyzer, a high-level ftp-protocol big size recursive file downloader and merra file analyser.
 # Copyright : Mantosh Kumar @ TUM, Germany
 
+
 This README document contains all the informations that are necessary to get this application up and running.
+
+
+### Summary ###
+---------------------------------------------------------------------------------------------------
+* MERRA DATA ANALYZER
+* Description :
+* Version     : 1.0
+* Repository  : https://bitbucket.org/mantoshkumar1/merra_data_analyzer
+
 
 ### How to use this tool ###
 ---------------------------------------------------------------------------------------------------
 $ cd merra_analyzer
 $ export PYTHONPATH=$PWD
 $ python scripts/hdf_script.py
+--------- Relax Now ----------
 
+Note : You can see the logging of this tool in home directory "log.log" file.
+
+# For advanced user / Developer only to manually configure MERRA DB
 $ psql
 $ create database merra; (Set this DB_NAME in cfg.py)
 $ \c merra;  (connect to DB)
 $ \q         (exit from psql prompt)
 
-### Where is its repository? ###
 
-* MERRA DATA ANALYZER (write a short description)
-* Version : 1.0
-* https://bitbucket.org/mantoshkumar1/merra_data_analyzer
+### Configuration ###
+---------------------------------------------------------------------------------------------------
+You can adjust the control settings of this tool by modifying "cfg.py" in home directory.
+By default every field is assigned some values. Each field is explained below in this section.
+Note : Please be aware that merra_analyzer is the home directory of this tool. All relative addresses should be \
+       computed relative to this directory.
 
-### How do I get set up? ###
+1. MERRA_LOGGING_FILE_PATH
+
+   # You can use this field to specify the location where you want merra tool logging file. Enter absolute / relative path of file
+     MERRA_LOGGING_FILE_PATH  =   '/user/log.log,
+     MERRA_LOGGING_FILE_PATH  =   './../log.log,
+
+
+2. YOUR_LOCAL_HDFFILE_DIR_PATH
+
+   # YOUR_LOCAL_HDFFILE_DIR_PATH = '/user/local_hdf_files',
+     You can use this setting to populate the MERRA DB with local HDF files.
+
+     Set this field to relative / absolute path of a directory where you have local HDF files. It will find all the hdf files \
+     stored inside that directory & its subdirectories.
+
+     Please note that if you enable this setting then all settings related with FTP server will be disabled. There will be no \
+     FTP server crawling. Good part is you do not need internet connectivity for this.
+
+   # YOUR_LOCAL_HDFFILE_DIR_PATH = None,
+     You can use this setting for crawling FTP server and finding all HDF files over there.
+
+
+3. MERRA_DATA_DOWNLOAD_DIR_PATH
+   This is one of the FTP related setting.
+
+   MERRA_DATA_DOWNLOAD_DIR_PATH = /user/download_hdf_dir,
+   Set your choice of directory path where you want to download HDF files. By default those files will be \ 
+   downloaded in "merra_downloaded_data" directory.
+
+
+4. SAVE_DOWNLOADING_DATA
+   This is one of the FTP related setting.
+
+   SAVE_DOWNLOADING_DATA = True,
+   if you want to store downloading files in your preferred directory.
+
+   SAVE_DOWNLOADING_DATA = False,
+   if you do not want to store downloading files. After DB population it will be deleted.
+
+
+5. USER_EMAIL_ADDR   
+   This is one of the FTP related setting.
+
+   USER_EMAIL_ADDR : 'user@tum.de',
+   NASA FTP server uses email as password for login (even dummy email will work) 
+
+
+6. FTP_DEBUG_LEVEL
+   This is one of the FTP related setting.
+ 
+   FTP_DEBUG_LEVEL : 0, 
+   Use this setting to observe interacton of this tool with ftp server. You can choose one among \ 
+   0(none), 1(some output), 2 (max output).
+   
+
+7. FTP_HOST_ADDR
+   This is one of the FTP related setting.
+
+   FTP_HOST_ADDR : 'ftp.tum.de',
+   FTP_HOST_ADDR : '1.2.3.4',
+   Set FTP host address. Both Domain name and ip address are acceptable.
+
+
+8. FTP_HOME_DIR
+   This is one of the FTP related setting. It sets the home directory over ftp server.
+   Let assume you want to download from "ftp.tum.de/x/y"
+   So set::   FTP_HOST_ADDR : 'ftp.tum.de'
+   and set::  FTP_HOME_DIR  : '/x/y'
+
+
+   FTP_HOME_DIR : ["/"],
+   If you are uncertain which should be your home dir over ftp server, set it to ["/"]
+
+   FTP_HOME_DIR : ["/x/y", "dat"],
+   You can select multiple home directory over ftp server in which you want to crawl.
+
+
+8. FTP_DOWNLOADING_FILE_TYPE
+   This is one of the FTP related setting.
+
+   FTP_DOWNLOADING_FILE_TYPE : '.hdf',
+   Set the type of downloading file from FTP server.
+
+
+10. MAX_ATTEMPTS_TO_DOWNLOAD
+    This is one of the FTP related setting.
+
+    MAX_ATTEMPTS_TO_DOWNLOAD : 11,
+    Set the number of maximum tries to reconnect with network in case of network failure while downloading a file.
+
+
+11. RETRY_TIMEOUT
+    This is one of the FTP related setting.
+
+    RETRY_TIMEOUT : 15,
+    Set this waiting time(seconds) before reconnecting while downloading if the connection dies.
+
+12. MERRA_DB_NAME : 'merra',
+    This is one of the MERRA DB related setting. Enter the name of your db.
+
+
+13. MERRA_DB_LOGIN : 'postgres',
+    This is one of the MERRA DB related setting. Enter your user name / login of db
+  
+  
+14. MERRA_DB_PASSWORD : 'password',
+    This is one of the MERRA DB related setting. Enter your password of your db.
+
+
+15. MERRA_DB_HOST_IP : '127.0.0.1',
+    This is one of the MERRA DB related setting. Set host ip of your db.
+
+
+16. MERRA_DB_PORT : '5432',
+    This is one of the MERRA DB related setting. Set the port of your db.
+
+
+17. RESET_MERRA_DB
+    This is one of the MERRA DB related setting. Set the port of your db.
+
+    RESET_MERRA_DB : True,
+    It will delete all previous data saved in merra db and all tables will be droped. DB will be populated with new data.
+
+    RESET_MERRA_DB : False,
+    It will keep old data intact.
+    
+
+### How do I get set up? / Dependencies ###
+---------------------------------------------------------------------------------------------------
 
 *  Follow following steps:
 1. Operating system description: Debian GNU/Linux 8.1 (jessie)
@@ -53,22 +197,22 @@ $ \q         (exit from psql prompt)
 
 4. Install easy_install to automatically download, build, install, and manage Python packages.
    Execute only one of the following steps 4.1 or 4.2:
-   4.1  you will may need to invoke the command with superuser privileges to install to the system Python: (NOTE)
-        $ wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python
+   <4.1>  you need to invoke this command with superuser privileges to install to the system Python: (see NOTE)
+          $ wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python
 
-   4.2  Alternatively, Setuptools may be installed to a user-local path: (NOTE)
-        $ wget https://bootstrap.pypa.io/ez_setup.py -O - | python - --user
+   <4.2>  Alternatively, Setuptools may be installed to a user-local path: (see NOTE)
+          $ wget https://bootstrap.pypa.io/ez_setup.py -O - | python - --user
 
    NOTE: In case it fails, please check the failure log displayed on screen and find out which dependencies are missing.
          Download and install those dependencies one after another and once it's done, try the same command again.
 
-5. Installing C and gfortan compiler with software package gcc:
+5. Install C and gfortan compiler with software package gcc:
    # check the list of installed compilers
      $ dpkg --list | grep compiler
 
    Note : If both gcc and gfortran are missing, follow step 5.1
-          If gcc is missing, follow step 5.1
-          If gcc is installed but gfortran is missiing, follow steep 5.2
+          Else if gfortran is installed but gcc is missing, follow step 5.1
+          Else if gcc is installed but gfortran is missiing, follow steep 5.2
 
           Follow only one of the below step (5.1 or 5.2).
 
@@ -102,6 +246,7 @@ $ \q         (exit from psql prompt)
    $ make check
    $ sudo make install
 
+
 7. Install Szip
    $ wget http://www.hdfgroup.org/ftp/lib-external/szip/2.1/src/szip-2.1.tar.gz
    $ tar -xvf szip-2.1.tar.gz
@@ -121,7 +266,6 @@ $ \q         (exit from psql prompt)
    $ sudo apt-get install software-properties-common
    $ sudo apt-add-repository ppa:ubuntugis/ppa
    $ sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
-
    $ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
    $ sudo apt-get install wget ca-certificates
@@ -137,7 +281,7 @@ $ \q         (exit from psql prompt)
    $ sudo apt-get install postgresql-9.4-pgrouting
    $ sudo apt-get install libpq-dev python-psycopg2
 
-   $ sudo -i -u postgres     (postgres is your db user name, bu default it is set in cfg.py)
+   $ sudo -i -u postgres     (postgres is your db user name / login, by default it is set in cfg.py)
    # For the first time, it would ask to set a password (Set this passowrd in cfg.py), \
      From next time you will be auto-logged in and will be able to interact with the \
      database management system right away. You can exit out of the PostgreSQL prompt by pressing Ctrl+D
@@ -147,7 +291,7 @@ $ \q         (exit from psql prompt)
      # Press 'y' for role as a superuser
 
    $ createdb YOUR_DB_NAME;
-   $ psql -U your_db_name;
+   $ psql -U YOUR_DB_NAME;
    $ CREATE DATABASE routing;
    $ \c routing
    $ CREATE EXTENSION postgis;
@@ -156,8 +300,8 @@ $ \q         (exit from psql prompt)
    # If last call is successful, Installtion of POSTGRESQL/PGIS is complete.
 
 
-
 10. $ sudo pip install matplotlib mpl_toolkits psycopg2
+
 
 11. $ sudo apt-get update
     $ sudo apt-get upgrade
@@ -165,21 +309,11 @@ $ \q         (exit from psql prompt)
 You are now ready to use the merra tool.
 
 
-
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
 ### Who do I talk to? ###
+---------------------------------------------------------------------------------------------------
+# LinkedIn  : de.linkedin.com/in/mantoshk
+# eMail     : mantosh.kumar@tum.de
+#             mantoshkumar1@gmail.com
 
-* Repo owner or admin
-* Other community or team contact
+
 

@@ -1,11 +1,14 @@
-import os
+# You can use this software for your purpose provided you include below two lines.
+# This file is part of merra_data_analyzer, a high-level ftp-protocol big size recursive file downloader and merra file analyser.
+# Copyright : Mantosh /Gaurav  @ TUM, Germany
 
+import os
 import numpy as np
 from pyhdf.SD import SD, SDC
     
 class ExtractMerraFile:
 
-    def __init__(self):
+    def __init__(self, log):
         """
         Function name : __init__
         
@@ -15,8 +18,13 @@ class ExtractMerraFile:
     
         Return        :None
         """        
+
         print " ExtractMerraFile Init "
+        self.log = log
+        self.log.write('\nExtractMerraFile class initialized')
+
         
+
     def ConfigureMerraFiledetails(self,hdffile,variablename): 
         """
         Function name : ConfigureMerraFiledetails
@@ -28,9 +36,11 @@ class ExtractMerraFile:
         Return        :None
         """        
         
-        self.hdffile=hdffile
-        self.variablename=variablename           
+        self.hdffile = hdffile
+        self.variablename = variablename           
         
+
+
     def HDFFileHandler(self):  
         """
         Function name : HDFFileHandler
@@ -44,8 +54,8 @@ class ExtractMerraFile:
           
         self.hdf = SD(self.hdffile, SDC.READ)
 
-        
-        
+
+
     def ExtractDataDimesions_3D(self):
         """
         Function name : ExtractDataDimesions
@@ -146,6 +156,7 @@ class ExtractMerraFile:
         missing_value = mva[0]
         #print " missing_value   : ",missing_value
         lna=attrs["long_name"]
+
         #print " lna   : ",lna
         long_name = lna[0]
         ua=attrs["units"]
@@ -199,3 +210,4 @@ class ExtractMerraFile:
         #self.datam = np.ma.masked_array(self.data, np.isnan(self.data))
     
     
+ 
