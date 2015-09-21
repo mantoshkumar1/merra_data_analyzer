@@ -647,12 +647,16 @@ class merra_tool:
 
         """
 
-	hdffile = full_path 
-	hdffilename = file_name
+    	hdffile = full_path 
+    	hdffilename = file_name
 
 
         MerraProductName = self.Merra.ExtractMerraProductName(hdffilename)
+        MerraProductDate = self.Merra.ExtractMerraProductDate(hdffilename)
         print " MerraProductName ", MerraProductName
+        print " MerraProductDate ", MerraProductDate
+        name = raw_input("What is your name? ") 
+
 
 
         Attribute_list=len(self.Merra.MerraProductsInfo[MerraProductName]['AttributesList'])
@@ -663,54 +667,118 @@ class merra_tool:
             Dim = self.Merra.MerraProductsInfo[MerraProductName]['DIMList'][counter]
             print " AttributeName  : ",AttributeName
             print " Dim    : ",Dim
+      
 
-            self.Extract.ConfigureMerraFiledetails(hdffile,AttributeName)
-            self.Extract.HDFFileHandler()
-            self.Extract.ExtractDataDimesions()
-        
-            ### For Loop o handle time 
-            timeInterval = 1
-            self.Extract.ExtractData(timeInterval)
-  
- 
-            ## Connection Setup 
-            tablename = DatabaseTablesName[MerraProductName]
-            tablename = tablename+"_"+AttributeName
-            ## Table name should be in LowerCase only
-            tablename = tablename.lower()
-        
-            flag = self.DB.check_If_Table_Exist(tablename)
-        
-            ## If table does not exist than create it else append Data in existing Table
-            if(flag == False):
-                # Table Created
-                self.DB.CreateSpatialTable(tablename,AttributeName)       
-         
-            time = datetime.now()
-    
-            counter = 0
-            for ht in range(0,self.Extract.height_len):
-                # need improvement
-                if(counter > 1000):
-                    break
-                for lat in range(0,self.Extract.latitude_len):
-                    if(counter > 1000):
-                        break
-                    for lon in range(0,self.Extract.longitude_len):
-                         value     = self.Extract.data[ht][lat][lon]
-                         Height    = self.Extract.height_list[ht]
-                         Lattitude = self.Extract.latitude_list[ht]
-                         Longitude = self.Extract.longitude_list[ht]
-                         unit      = str(self.Extract.unit)
-
-                         # Value Added
-                         self.DB.AddSpatialData(tablename,time,Lattitude,Longitude,Height,value)
-                         counter = counter + 1
-                         print " counter : ",counter
+            if Dim=="3D":
+                self.Extract.ConfigureMerraFiledetails(hdffile,AttributeName)
+                self.Extract.HDFFileHandler()
+                self.Extract.ExtractDataDimesions_3D()
+            
+                for timeInterval in range(0,self.Extract.time_len):
+                    
+                    MerraProduct_Time=MerraProductDate+" "+self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]
+                    
+                    MerraProduct_Time = datetime.strptime(MerraProduct_Time, '%m/%d/%Y %H:%M:%S')
+                            
+                    print self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]        
+                    print MerraProduct_Time
+                    name = raw_input("abc? ") 
                     
                     
-            print" Total Number of Elements Inserted : ",counter
-
+                    
+                    self.Extract.ExtractData_3D(timeInterval)
+                    ## Connection Setup 
+                    tablename = DatabaseTablesName[MerraProductName]
+                    tablename = tablename+"_"+AttributeName
+                    ## Table name should be in LowerCase only
+                    tablename = tablename.lower()
+                
+                    flag = self.DB.check_If_Table_Exist(tablename)
+                
+                    ## If table does not exist than create it else append Data in existing Table
+                    if(flag == False):
+                        # Table Created
+                        self.DB.Create3DTable(tablename,AttributeName)       
+                 
+                    time = MerraProduct_Time
+            
+                    counter = 0
+                    for ht in range(0,self.Extract.height_len):
+                        # need improvement
+                        if(counter > 1):
+                            break
+                        for lat in range(0,self.Extract.latitude_len):
+                            if(counter > 1):
+                               break
+                            for lon in range(0,self.Extract.longitude_len):
+                                 value     = self.Extract.data[ht][lat][lon]
+                                 Height    = self.Extract.height_list[ht]
+                                 Lattitude = self.Extract.latitude_list[lat]
+                                 Longitude = self.Extract.longitude_list[lon]
+                                 unit      = str(self.Extract.unit)
+        
+                                 # Value Added
+                                 self.DB.Add3DData(tablename,time,Lattitude,Longitude,Height,value)
+                                 counter = counter + 1
+                                 print " counter : ",counter
+                            
+                            
+                    print" Total Number of Elements Inserted : ",counter
+            ## 2D Data
+            else:
+                self.Extract.ConfigureMerraFiledetails(hdffile,AttributeName)
+                self.Extract.HDFFileHandler()
+                self.Extract.ExtractDataDimesions_2D()
+            
+                for timeInterval in range(0,self.Extract.time_len):
+                    
+                    MerraProduct_Time=MerraProductDate+" "+self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]
+                    
+                    MerraProduct_Time = datetime.strptime(MerraProduct_Time, '%m/%d/%Y %H:%M:%S')
+                    
+                    print self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]        
+                    print MerraProduct_Time
+                    name = raw_input("abc? ") 
+                    
+                            
+                    self.Extract.ExtractData_2D(timeInterval)
+                    ## Connection Setup 
+                    tablename = DatabaseTablesName[MerraProductName]
+                    tablename = tablename+"_"+AttributeName
+                    ## Table name should be in LowerCase only
+                    tablename = tablename.lower()
+                
+                    flag = self.DB.check_If_Table_Exist(tablename)
+                
+                    ## If table does not exist than create it else append Data in existing Table
+                    if(flag == False):
+                        # Table Created
+                        self.DB.Create2DTable(tablename,AttributeName)       
+                 
+                    time = MerraProduct_Time
+            
+                    counter = 0
+                    for lat in range(0,self.Extract.latitude_len):
+                        if(counter > 1):
+                            break
+                        for lon in range(0,self.Extract.longitude_len):
+                             value     = self.Extract.data[lat][lon]
+                             Lattitude = self.Extract.latitude_list[lat]
+                             Longitude = self.Extract.longitude_list[lon]
+                             unit      = str(self.Extract.unit)
+            
+                             # Value Added
+                             self.DB.Add2DData(tablename,time,Lattitude,Longitude,value)
+                             counter = counter + 1
+                             print " counter : ",counter
+                            
+                            
+                    print" Total Number of Elements Inserted : ",counter                
+                
+                
+                
+                
+                        
         # adding downloaded hdf file name in DB 
         self.DB.AddfilesnameinTable(hdffilename)   
     
