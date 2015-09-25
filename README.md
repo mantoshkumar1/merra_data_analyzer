@@ -9,7 +9,7 @@ This README document contains all the informations that are necessary to get thi
 ### Summary ###
 ---------------------------------------------------------------------------------------------------
 * MERRA DATA ANALYZER
-* Description :
+* Description : Download MERRA data from NASA FTP server, extract and populate them to Postgres database
 * Version     : 1.0
 * Repository  : https://bitbucket.org/mantoshkumar1/merra_data_analyzer
 
@@ -300,7 +300,7 @@ Note : Please be aware that merra_analyzer is the home directory of this tool. A
    # If last call is successful, Installtion of POSTGRESQL/PGIS is complete.
 
 
-10. $ sudo pip install matplotlib mpl_toolkits psycopg2
+10. $ sudo pip install matplotlib mpl_toolkits psycopg2 qgis
 
 
 11. $ sudo apt-get update

@@ -181,8 +181,8 @@ class MerraDatabase:
         Parameters    : table name
     
         Return        : Flag :True if exist False if not
-        """        
-
+        """     
+   
         if(False == self.check_If_Table_Exist(Tablename)):
 
             try:

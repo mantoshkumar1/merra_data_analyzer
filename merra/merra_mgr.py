@@ -743,14 +743,14 @@ class merra_tool:
             print " Dim    : ",Dim
       
 
-            if Dim=="3D":
+            if Dim == "3D":
                 self.Extract.ConfigureMerraFiledetails(hdffile,AttributeName)
                 self.Extract.HDFFileHandler()
                 self.Extract.ExtractDataDimesions_3D()
             
                 for timeInterval in range(0,self.Extract.time_len):
                     
-                    MerraProduct_Time=MerraProductDate+" "+self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]
+                    MerraProduct_Time = MerraProductDate + " " + self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]
                     
                     MerraProduct_Time = datetime.strptime(MerraProduct_Time, '%m/%d/%Y %H:%M:%S')
                             
@@ -761,7 +761,7 @@ class merra_tool:
                     self.Extract.ExtractData_3D(timeInterval)
                     ## Connection Setup 
                     tablename = DatabaseTablesName[MerraProductName]
-                    tablename = tablename+"_"+AttributeName
+                    tablename = tablename + "_" + AttributeName
                     ## Table name should be in LowerCase only
                     tablename = tablename.lower()
                 
@@ -775,13 +775,17 @@ class merra_tool:
                     time = MerraProduct_Time
             
                     counter = 0
+
                     for ht in range(0,self.Extract.height_len):
                         # need improvement
                         if(counter > 1):
                             break
+
                         for lat in range(0,self.Extract.latitude_len):
+
                             if(counter > 1):
                                break
+
                             for lon in range(0,self.Extract.longitude_len):
                                  value     = self.Extract.data[ht][lat][lon]
                                  Height    = self.Extract.height_list[ht]
@@ -796,6 +800,8 @@ class merra_tool:
                             
                             
                     print" Total Number of Elements Inserted : ",counter
+
+
             ## 2D Data
             else:
                 self.Extract.ConfigureMerraFiledetails(hdffile,AttributeName)
@@ -804,7 +810,7 @@ class merra_tool:
             
                 for timeInterval in range(0,self.Extract.time_len):
                     
-                    MerraProduct_Time=MerraProductDate+" "+self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]
+                    MerraProduct_Time = MerraProductDate + " " + self.Merra.MerraProductsInfo[MerraProductName]['timeintervallist'][timeInterval]
                     
                     MerraProduct_Time = datetime.strptime(MerraProduct_Time, '%m/%d/%Y %H:%M:%S')
                     
@@ -815,7 +821,7 @@ class merra_tool:
                     self.Extract.ExtractData_2D(timeInterval)
                     ## Connection Setup 
                     tablename = DatabaseTablesName[MerraProductName]
-                    tablename = tablename+"_"+AttributeName
+                    tablename = tablename + "_" + AttributeName
                     ## Table name should be in LowerCase only
                     tablename = tablename.lower()
                 
@@ -829,9 +835,12 @@ class merra_tool:
                     time = MerraProduct_Time
 
                     counter = 0
+
                     for lat in range(0,self.Extract.latitude_len):
+
                         if(counter > 1):
                             break
+
                         for lon in range(0,self.Extract.longitude_len):
                              value     = self.Extract.data[lat][lon]
                              Lattitude = self.Extract.latitude_list[lat]
