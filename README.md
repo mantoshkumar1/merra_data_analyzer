@@ -270,7 +270,7 @@ Note : Please be aware that merra_analyzer is the home directory of this tool. A
 
    $ sudo apt-get install wget ca-certificates
    $ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-   $ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt jessie-pgdg main" >> /etc/apt/sources.list'
+   $ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list'
    $ wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | sudo apt-key add -
    $ sudo apt-get update
    $ sudo apt-get upgrade
@@ -300,10 +300,17 @@ Note : Please be aware that merra_analyzer is the home directory of this tool. A
    # If last call is successful, Installtion of POSTGRESQL/PGIS is complete.
 
 
-10. $ sudo pip install matplotlib mpl_toolkits psycopg2 qgis
+10. $ sudo pip install matplotlib mpl_toolkits psycopg2
 
 
-11. $ sudo apt-get update
+11. # Install geographic information system (GIS) application that provides data viewing, editing, and analysis capabilities
+    $ sudo sh -c 'echo "deb http://qgis.org/debian $(lsb_release -cs) main" >> /etc/apt/sources.list'
+    $ sudo sh -c 'echo "deb-src http://qgis.org/debian $(lsb_release -cs) main" >> /etc/apt/sources.list'
+    $ sudo apt-get update
+    $ sudo apt-get install qgis python-qgis qgis-plugin-grass
+
+
+12. $ sudo apt-get update
     $ sudo apt-get upgrade
 
 You are now ready to use the merra tool.
