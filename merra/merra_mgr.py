@@ -385,7 +385,6 @@ class merra_tool:
 
 
                 print "\n" + "Downloading starts for : " + hdf_file
-                self.log.write('\nDownloading starts for : ' + str(hdf_file))
                 print "************************************************************************"
                 if(self.download_file(hdf_file)):
                 #if 0:
@@ -508,6 +507,8 @@ class merra_tool:
                       In case of failure : False
         """
     
+        self.log.write('\nDownloading starts for : ' + str(hdf_file))
+
         num_attempts = self.max_attempts
 
         self.make_sure_path_exists(self.download_path)

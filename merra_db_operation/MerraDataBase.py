@@ -308,8 +308,7 @@ class MerraDatabase:
       
         try: 
 
-            self.cur.execute("CREATE EXTENSTION POSTGIS;")
-            self.conn.commit()
+            self.cur.execute("CREATE EXTENSION pgrouting;")
  
             print "POSTGIS Extension created"
             self.log.write('\nSuccess : POSTGIS Extension created')
@@ -444,18 +443,24 @@ class MerraDatabase:
             self.cur.execute("INSERT INTO "+str(tablename)+" VALUES('"+str(time)+"',ST_GeomFromText('POINT("+str(lat)+" "+str(lon)+" "+str(alt)+")',4326),"+str(value)+");")
 
             self.conn.commit()
-            print "3D Data Added successfully in " + str(tablename)
-            self.log.write('\nSuccess : 3D data added in table ' + str(tablename))
+            print 'Success : 3D Data : ' +  str(time) + ', ' + str(lat) + ', ' + str(lon) + ', ' + str(alt) + ', ' + str(value) + \
+                  ' added in table ' + str(tablename)
+
+            self.log.write('\nSuccess : 3D data ' + str(time) + ', ' + str(lat) + ', ' + str(lon) + ', ' + str(alt) + ', ' + str(value) + \
+                              ' added in table ' + str(tablename))
 
         except psycopg2.Error as e:
 
             print "Error : " + str(e)
-            self.log.write('\nError : 3D Data addition failed in table ' + str(tablename) + ' - ' + str(e))
+            self.log.write('\nError : 3D data ' + str(time) + ' ' + str(lat) + ' ' + str(lon) + ' ' + str(alt) + ' ' + str(value) + \
+                              ' addition in table ' + str(tablename) + ' failed : ' + str(e))
 
         except:
 
             e = sys.exc_info()[0]
-            self.log.write('\nError : 3D Data addition failed in table ' + str(tablename) + ' - ' + str(e))
+            self.log.write('\nError : 3D data ' + str(time) + ' ' + str(lat) + ' ' + str(lon) + ' ' + str(alt) + ' ' + str(value) + \
+                              ' addition in table ' + str(tablename) + ' failed : ' + str(e))
+
             print "Error : " + str(e)
             
 
@@ -481,19 +486,24 @@ class MerraDatabase:
 
             self.cur.execute("INSERT INTO "+str(tablename)+" VALUES('"+str(time)+"',ST_GeomFromText('POINT("+str(lat)+" "+str(lon)+")',4326),"+str(value)+");")
             self.conn.commit()
-            print "2D Data Added successfully in " + str(tablename)
-            self.log.write('\nSuccess : 2D data added in table ' + str(tablename))
+            print 'Success : 2D Data : ' + str(time) + ', ' + str(lat) + ', ' + str(lon) + ', ' + str(value) + ' added in ' + str(tablename)
+
+            self.log.write('\nSuccess : 2D data : ' + str(time) + ', ' + str(lat) + ', ' + str(lon) + ', ' + str(value) + \
+                              ' added in table ' + str(tablename))
 
         except psycopg2.Error as e:
 
             print "Error : " + str(e)
-            self.log.write('\nError : 2D Data addition failed in table ' + str(tablename) + ' - ' + str(e))
+            self.log.write('\nError : 2D data : ' + str(time) + ', ' + str(lat) + ' ' + str(lon) + ' ' + str(value) + \
+                              ' addition in table ' + str(tablename) + ' failed : ' + str(e))
 
 
         except:
 
             e = sys.exc_info()[0]
-            self.log.write('\nError : 2D Data addition failed in table ' + str(tablename) + ' - ' + str(e))
+            self.log.write('\nError : 2D data : ' + str(time) + ', ' + str(lat) + ', ' + str(lon) + ', ' + str(value) + \
+                              ' addition in table ' + str(tablename) + ' failed : ' + str(e))
+
             print "Error : " + str(e)
         
     
@@ -547,21 +557,21 @@ class MerraDatabase:
             self.cur.execute("INSERT INTO Test(NAME,AGE) VALUES( '''"+str(name)+"''',"+str(age)+" );")
             self.conn.commit()
 
-            print "Success: Data Added in table"      
-            self.log.write('\nSuccess : Data added in table')
+            print 'Success: Data: ' + str(name) + ', ' + str(age) + ' added in table'
+            self.log.write('\nSuccess : Data: ' + str(name) + ', ' + str(age) + ' added in table')
 
 
         except psycopg2.Error as e:
 
             print "Error : " + str(e)
-            self.log.write('\nError : Data addition failed - ' + str(e))
+            self.log.write('\nError : Data: ' + str(name) + ', ' + str(age) + ' addition failed - ' + str(e))
 
 
         except:
 
             e = sys.exc_info()[0]
             print "Error : " + str(e)
-            self.log.write('\nError : Data addition failed - ' + str(e))
+            self.log.write('\nError : Data: ' + str(name) + ', ' + str(age) + ' addition failed - ' + str(e))
 
 
       
@@ -601,7 +611,7 @@ class MerraDatabase:
         """ 
         Function name : reset_merra_db
 
-        Description   : This function will wipe out every info saved in merra DB (Are you sure to make MERRA DB dumb ?)
+        Description   : This function will wipe out every MERRA info saved in merra DB (Are you sure to make MERRA DB dumb ?)
 
         Parameters    : 
          
@@ -610,29 +620,35 @@ class MerraDatabase:
 
         try:
 
-            self.cur.execute("SELECT table_schema,table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_schema,table_name")
+            self.cur.execute("select relname from pg_class where relkind='r' and relname !~ '^(pg_|sql_)';")
 
             rows = self.cur.fetchall()
 
             for row in rows:
+               
+                if row[0] == 'spatial_ref_sys':
+                    continue
 
                 try:
 
-                    self.cur.execute("drop table " + row[1] + " cascade")
+                    self.cur.execute("drop table " + row[0] + " cascade")
                     self.conn.commit()
 
-                    print "Table " + str(row[1]) + " dropped"
-                    self.log.write('\nSuccess : Table ' + str(row[1]) + ' dropped')
+                    print "Table " + str(row[0]) + " droped"
+                    self.log.write('\nSuccess : Table ' + str(row[0]) + ' droped')
 
                 except:
 
                     e = sys.exc_info()[1]
-                    print "Error : drop table " + str(row[1]) + " failed - " + str(e)
-                    self.log.write('Error : drop table ' + str(row[1]) + ' failed - ' + str(e))
-
-
-            print "Success : MERRA db is reset"
-            self.log.write('\nSuccess : MERRA db is reset')
+                    print "Error : drop table " + str(row[0]) + " failed - " + str(e)
+                    self.log.write('Error : drop table ' + str(row[0]) + ' failed - ' + str(e))
+                    print "Error : db reset failed"
+                    self.log.write('\nError : db reset failed')
+                    break
+            
+            else:
+                print "Success : MERRA db is reset"
+                self.log.write('\nSuccess : MERRA db is reset')
 
 
         except psycopg2.Error as e:
