@@ -507,7 +507,7 @@ class merra_tool:
                       In case of failure : False
         """
     
-        self.log.write('\nDownloading starts for : ' + str(hdf_file))
+        self.log.write('\nDownloading starts for : ' + str(file_name))
 
         num_attempts = self.max_attempts
 
