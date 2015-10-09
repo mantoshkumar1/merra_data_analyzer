@@ -20,7 +20,7 @@ MEERA_ANALYZER_CFG = {
                          #
                          # Note: If you enable this setting then all settings related with FTP server will \
                          #       automatically become idle.
-                         YOUR_LOCAL_HDFFILE_DIR_PATH   : '/home/mantosh/Desktop/new_hdf_data', #None,
+                         YOUR_LOCAL_HDFFILE_DIR_PATH   : None, #'/home/mantosh/Desktop/new_hdf_data',
 
 
 
@@ -32,7 +32,7 @@ MEERA_ANALYZER_CFG = {
 
                          # 2. Set to True if you want to store downloading files in above directory
                          #            False: it will be deleted once db gets populated
-                         SAVE_DOWNLOADING_DATA         :  True,
+                         SAVE_DOWNLOADING_DATA         :  False,
 
                          # 3. NASA FTP server uses email as password for login (even dummy email will work)
                          USER_EMAIL_ADDR               :  'demo@tum.de',
@@ -72,10 +72,10 @@ MEERA_ANALYZER_CFG = {
                          MERRA_DB_NAME                 :  'merra',
 
                          # 2. Tool DB user name
-                         MERRA_DB_LOGIN                :  'mantosh', #'postgres',
+                         MERRA_DB_LOGIN                :  'postgres',
 
                          # 3. Tool DB password
-                         MERRA_DB_PASSWORD             :  'password', #'gnusmas',
+                         MERRA_DB_PASSWORD             :  'password',
  
                          # 4. Tool DB host ip **
                          MERRA_DB_HOST_IP              :  '127.0.0.1', 
